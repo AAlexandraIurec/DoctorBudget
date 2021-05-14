@@ -123,6 +123,15 @@
         android:layout_marginTop="5dp"
         android:text="@string/btn_add_pfs" />
 
+    <Button
+        android:id="@+id/btn_update_pfs"
+        android:layout_width="194dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/btn_update"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_personal_finance_source"
         android:layout_width="wrap_content"

@@ -65,7 +65,7 @@ public class ExpenseActivity extends AppCompatActivity {
     Spinner spinner_subcategory_expense, spinner_choose_pfs;
     ImageView img_doc_expense;
     LinearLayout form_add_expense, up_expense_activity_layout;
-    Button btn_reg_new_expense, btn_add_expense, btn_change_date_for_expense, btn_abort_expense;
+    Button btn_reg_new_expense, btn_add_expense, btn_change_date_for_expense, btn_abort_expense, btn_update_expense;
 
     String userCountry;
     int userID;
@@ -115,6 +115,7 @@ public class ExpenseActivity extends AppCompatActivity {
         btn_reg_new_expense = findViewById(R.id.btn_reg_new_expense);
         btn_add_expense = findViewById(R.id.btn_add_expense);
         btn_abort_expense = findViewById(R.id.btn_abort_expense);
+        btn_update_expense = findViewById(R.id.btn_update_expense);
         btn_change_date_for_expense = findViewById(R.id.btn_change_date_for_expense);
         btn_change_date_for_expense = findViewById(R.id.btn_change_date_for_expense);
 
@@ -124,8 +125,6 @@ public class ExpenseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 changeDatesForSelectExpense();
-
-
             }
         });
 
@@ -134,6 +133,9 @@ public class ExpenseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 up_expense_activity_layout.setVisibility(View.GONE);
                 form_add_expense.setVisibility(View.VISIBLE);
+                btn_update_expense.setVisibility(View.GONE);
+                btn_add_expense.setVisibility(View.VISIBLE);
+                clearInputFields();
             }
         });
 

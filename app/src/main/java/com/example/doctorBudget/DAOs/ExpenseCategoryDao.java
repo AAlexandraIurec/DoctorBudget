@@ -22,4 +22,9 @@ public interface ExpenseCategoryDao {
 
     @Query("SELECT * FROM ExpenseCategory")
     List<ExpenseCategory> getAllExpenseCategories();
+
+    @Query("SELECT expenseCatName FROM ExpenseCategory INNER JOIN ExpenseSubcategory ON" +
+            " ExpenseCategory.ID_cat_expense =  ExpenseSubcategory.expense_cat_id " +
+            "WHERE ExpenseSubcategory.ID_subCat_expense =:subcatID")
+    String getExpenseCategoryName(int subcatID);
 }

@@ -134,10 +134,10 @@ public class RecycleViewIncomeAdaptor extends RecyclerView.Adapter<RecycleViewIn
                     adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerSubcategoryIncome.setAdapter(adapterSpinner);
                     if(incSubcatIncomeId==6)
-                        spinnerSubcategoryIncome.setSelection(0);
+                        spinnerSubcategoryIncome.setSelection(incSubcatIncomeId-incSubcatIncomeId);
                     else  if(incSubcatIncomeId==7)
-                        spinnerSubcategoryIncome.setSelection(1);
-                    else spinnerSubcategoryIncome.setSelection(2);
+                        spinnerSubcategoryIncome.setSelection(incSubcatIncomeId-6);
+                    else spinnerSubcategoryIncome.setSelection(incSubcatIncomeId-6);
                 }
 
                 Spinner spinnerPSFIncome = context.findViewById(R.id.spinner_choose_pfs);

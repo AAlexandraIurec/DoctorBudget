@@ -39,7 +39,7 @@ public class FinaceSourceActivity extends AppCompatActivity {
     RadioButton radio_gen,radio_pfs_casf,radio_pfs_dbt_card,radio_pfs_meal_tkt,
             radio_pfs_crd_card, radio_pfs_others;
     EditText edt_txt_pfs_name, edt_txt_pfs_note;
-    Button btn_add_pfs;
+    Button btn_add_pfs, btn_update_pfs;
     TextView txt_view_pfs_name_req, txt_view_pfs_cat_req;
 
     int user_id_pfs=0;
@@ -60,7 +60,10 @@ public class FinaceSourceActivity extends AppCompatActivity {
 
         edt_txt_pfs_name = findViewById(R.id.edt_txt_pfs_name);
         edt_txt_pfs_note = findViewById(R.id.edt_txt_pfs_note);
+
         btn_add_pfs = findViewById(R.id.btn_add_pfs);
+        btn_update_pfs =findViewById(R.id.btn_update_pfs);
+
         txt_view_pfs_name_req = findViewById(R.id.txt_view_required_pfs_name);
         txt_view_pfs_cat_req = findViewById(R.id.txt_view_required_pfs_category);
 
@@ -76,7 +79,6 @@ public class FinaceSourceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getContentFromInputFieldsAndInsertPFS();
-
             }
         });
 

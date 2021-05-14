@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doctorBudget.Entities.Expense;
 import com.example.doctorBudget.Entities.PersonalFinanceSource;
 import com.example.doctorBudget.R;
 
@@ -48,10 +52,89 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
         database = RoomDB.getInstance(context);
         //Set text on text view
 
-        holder. txt_view_list_basicTitle.setText(personalFinanceSource.getFinance_source_name());
+        holder.txt_view_list_basicTitle.setText(personalFinanceSource.getFinance_source_name());
         int id_cat = personalFinanceSource.getFinance_source_cat_id_pfs();
         holder.txt_view_list_basicSubtitle.setText(database.personalFinanceSourceCategoryDao().obtainPfsCatName(id_cat));
         holder.txt_view_list_basicNote.setText(personalFinanceSource.getNote());
+
+        holder.btn_edit_bsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonalFinanceSource pfs = personalFinanceSourceList.get(holder.getAdapterPosition());
+
+                int pfsID = pfs.getFinance_source_id();
+                int pfsUserID = pfs.getUser_id_pfs();
+                String pfsName =pfs.getFinance_source_name();
+                String pfsNote = pfs.getNote();
+                int pfsCatID = pfs.getFinance_source_cat_id_pfs();
+
+                String pfsCatName = database.personalFinanceSourceCategoryDao().obtainPfsCatName(pfsCatID);
+
+                EditText txtPfsName = context.findViewById(R.id.edt_txt_pfs_name);
+                txtPfsName.setText(pfsName);
+                EditText txtPfsNote = context.findViewById(R.id.edt_txt_pfs_note);
+                txtPfsNote.setText(pfsNote);
+
+                RadioButton pfsCash = context.findViewById(R.id.rdo_pfs_cash);
+                RadioButton pfsDbtCard = context.findViewById(R.id.rdo_pfs_dbt_card);
+                RadioButton pfsMealTkt = context.findViewById(R.id.rdo_pfs_meal_tkt);
+                RadioButton pfsCrdCard = context.findViewById(R.id.rdo_pfs_crd_card);
+                RadioButton pfsOthers = context.findViewById(R.id.rdo_pfs_others);
+
+                if(pfsCatName.equals("Portofel"))
+                    pfsCash.setChecked(true);
+                else if(pfsCatName.equals("Card de debit"))
+                    pfsDbtCard.setChecked(true);
+                else if(pfsCatName.equals("Tichete de masă"))
+                    pfsMealTkt.setChecked(true);
+                else if(pfsCatName.equals("Card de credit"))
+                    pfsCrdCard.setChecked(true);
+                else if(pfsCatName.equals("Altele"))
+                    pfsOthers.setChecked(true);
+
+                Button btn_update_pfs = context.findViewById(R.id.btn_update_pfs);
+                Button btn_add_pfs = context.findViewById(R.id.btn_add_pfs);
+                btn_add_pfs.setVisibility(View.GONE);
+                btn_update_pfs.setVisibility(View.VISIBLE);
+
+                btn_update_pfs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String sPfsName = txtPfsName.getText().toString();
+                        String sPfsNote = txtPfsNote.getText().toString();
+
+                        RadioGroup radio_grp_pfs_cat =context.findViewById(R.id.radio_grp_pfs_cat);
+                        int radioIDpfs = radio_grp_pfs_cat.getCheckedRadioButtonId();
+                        String sPfsCat = "";
+                        int intPfsCat = 0;
+                        try {
+                            RadioButton radio_gen = context.findViewById(radioIDpfs);
+                            sPfsCat = radio_gen.getText().toString();
+                            if(sPfsCat.equals("Portofel"))
+                                intPfsCat=1;
+                            else if(sPfsCat.equals("Card de debit"))
+                                intPfsCat=2;
+                            else if(sPfsCat.equals("Tichete de masă"))
+                                intPfsCat=3;
+                            else if(sPfsCat.equals("Card de credit"))
+                                intPfsCat=4;
+                            else if(sPfsCat.equals("Altele"))
+                                intPfsCat=5;
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        database.personalFinanceSourceDao().updatePFS(sPfsName, sPfsNote,intPfsCat,pfsUserID,pfsID);
+                        personalFinanceSourceList.clear();
+                        //data:
+                        List<PersonalFinanceSource> upPFS=database.personalFinanceSourceDao().getAllPersonalFinanceSources(pfsUserID);
+                        personalFinanceSourceList.addAll(upPFS);
+                        notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
 
 
         holder.btn_delete_bsc.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,7 @@
 package com.example.doctorBudget.DAOs;
 
+import android.graphics.Bitmap;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,6 +22,13 @@ public interface ExpenseDao {
 
     @Delete
     void deleteExpense(Expense expense);
+
+    @Query("UPDATE Expense SET amount_exp= :expAmount, date_of_registration_exp =:expRegDate, " +
+            "recurrent_exp=:expReccurent, note_exp=:expNote, attachment_exp=:expAttachment," +
+            "subcat_expense_id_exp=:expSubCat,  finance_source_id_exp=:expFinaceSource " +
+            "WHERE user_id_exp =:expUserID AND expense_id=:expID")
+    void updateExpense(double expAmount, Date expRegDate, int expReccurent, String expNote,
+                      Bitmap expAttachment, int expSubCat, int expFinaceSource, int expUserID, int expID);
 
     @Query("SELECT expense_id, amount_exp,date_of_registration_exp,finance_source_id_exp,user_id_exp," +
             " recurrent_exp ,subcat_expense_id_exp FROM Expense")

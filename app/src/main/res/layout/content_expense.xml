@@ -327,6 +327,14 @@
                 android:text="@string/btn_add" />
 
             <Button
+                android:id="@+id/btn_update_expense"
+                android:layout_width="170dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="25dp"
+                android:text="@string/btn_update"
+                android:visibility="gone"/>
+
+            <Button
                 android:id="@+id/btn_abort_expense"
                 android:layout_width="170dp"
                 android:layout_height="40dp"
