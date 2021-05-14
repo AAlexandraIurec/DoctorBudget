@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.doctorBudget.Activities.IncomeActivity">
+
+    <LinearLayout
+        android:id="@+id/up_income_activity_layout"
+        android:layout_width="match_parent"
+        android:layout_height="532dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_view_message_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/txt_view_first_msg_income"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_view_required_dates"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:textColor="#BF2525"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edt_txt_income_date_selection_1"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@android:drawable/editbox_background"
+                android:inputType="date"
+                android:padding="5dp" />
+
+            <EditText
+                android:id="@+id/edt_txt_income_date_selection_2"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/editbox_background"
+                android:inputType="date"
+                android:padding="5dp" />
+
+            <Button
+                android:id="@+id/btn_change_date_for_income"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/btn_change" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_income"
+            android:layout_width="wrap_content"
+            android:layout_height="361dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="30dp"
+            tools:listitem="@layout/list_row_basic" />
+
+    </LinearLayout>
+
+        <Button
+
+            android:id="@+id/btn_reg_new_income"
+            android:layout_width="367dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/btn_regiter_new_income"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/form_add_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_view_required_amount_income"
+                android:layout_width="255dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="95dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="textStart"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="231dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="95dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edt_txt_amount_income"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:ems="10"
+                    android:hint="@string/hint_amount_income"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    android:id="@+id/txt_view_income_currency"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_view_required_reg_date_income"
+                android:layout_width="255dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="95dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="textStart"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/edt_txt_reg_date_income"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="100dp"
+                android:ems="10"
+                android:hint="@string/hint_regist_date"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/txt_view_required_cat_income"
+                android:layout_width="255dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="95dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="textStart"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txt_view_cat_income"
+                android:layout_width="214dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="97dp"
+                android:padding="4dp"
+                android:text="@string/txt_view_choose_category_income"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_grp_income_cat"
+                android:layout_width="398dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rdo_fix_income"
+                    android:layout_width="155dp"
+                    android:layout_height="25dp"
+                    android:text="incomeCat1"
+                    android:textSize="14dp" />
+
+                <RadioButton
+                    android:id="@+id/rdo_variable_income"
+                    android:layout_width="155dp"
+                    android:layout_height="25dp"
+                    android:text="incomeCat2"
+                    android:textSize="14dp" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/txt_view_required_subCat_income"
+                android:layout_width="255dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="97dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="textStart"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txt_view_subcat_income"
+                android:layout_width="232dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="97dp"
+                android:padding="4dp"
+                android:text="@string/txt_view_choose_subcategory_income"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner_subcategory_income"
+                android:layout_width="318dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="40dp" />
+
+            <TextView
+                android:id="@+id/txt_view_required_psf_income"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="center"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txt_view_choose_pfs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:padding="4dp"
+                android:text="@string/txt_view_choose_pfs"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner_choose_pfs"
+                android:layout_width="318dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="40dp" />
+
+            <TextView
+                android:id="@+id/txt_view_required_recurrency_income"
+                android:layout_width="255dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="80dp"
+                android:text="@string/txt_view_star"
+                android:textAlignment="textStart"
+                android:textColor="#BF2525"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="390dp"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_view_recurrent_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="5dp"
+                    android:padding="4dp"
+                    android:text="@string/txt_view_recurrent_type"
+                    android:textSize="17sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_grp_recurrent_income"
+                    android:layout_width="125dp"
+                    android:layout_height="41dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rdo_rec_yes_income"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_delete_yes"
+                        android:textSize="16dp" />
+
+                    <RadioButton
+                        android:id="@+id/rdo_rec_no_income"
+                        android:layout_width="65dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/btn_delete_no"
+                        android:textSize="16dp" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <EditText
+                    android:id="@+id/edt_txt_income_note"
+                    android:layout_width="280dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="5dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/hint_income_notice"
+                    android:inputType="textMultiLine"
+                    android:textSize="14sp" />
+
+                <ImageView
+
+                    android:id="@+id/img_doc_income"
+                    android:layout_width="96dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_photo" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_add_income"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="25dp"
+                    android:text="@string/btn_add" />
+
+                <Button
+                    android:id="@+id/btn_update_income"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="25dp"
+                    android:text="@string/btn_update"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/btn_abort_income"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/btn_cancel" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>

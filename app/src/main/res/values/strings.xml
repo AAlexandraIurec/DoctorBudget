@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">Doctor Budget</string>
+    <string name="action_settings">Settings</string>
+
+
+
+    <string name="btn_home_menu">Home</string>
+    <string name="title_activity_user">Crearea unui nou profil</string>
+    <string name="title_activity_balance">Balanța profilului</string>
+    <string name="title_activity_income">Venituri</string>
+    <string name="title_activity_financeSource">Surse personale de finațare</string>
+    <string name="title_activity_expense">Cheltuieli</string>
+    <string name="title_activity_balance_of_accounts">Balanța tuturor profilurilor</string>
+
+    <string name="hint_first_name">Prenume</string>
+    <string name="hint_last_name">Nume</string>
+    <string name="hint_email">E-mail</string>
+    <string name="hint_bday">Data nașterii</string>
+    <string name="hint_country">Țara de origine</string>
+    <string name="hint_occupation">Ocupație</string>
+    <string name="hint_pers_finance_source_name">Pune un nume sugestiv </string>
+    <string name="hint_pers_finance_source_notice">Poți adăuga o notiță</string>
+    <string name="hint_amount_income">Suma introdusă</string>
+    <string name="hint_regist_date">Data înregistrării</string>
+    <string name="hint_income_notice">Poți adăuga o notiță și/sau să încarci o fotografie concludentă</string>
+    <string name="hint_amount_expense">Suma cheltuită</string>
+
+
+    <string name="txt_view_title_mainAC">Bine ai venit în registrul monetar al familiei tale!</string>
+    <string name="txt_view_first_message_mainAC">Pentru a începe gestiunea banilor, trebuie să configurezi unul sau mai multe profile.</string>
+    <string name="txt_view_second_message_mainAC">Ce profil vrei să utilizezi pentru următoarele acțiuni? </string>
+    <string name="txt_view_delete_msg">Ești sigur că vrei să ștergi acestă înregistrare?</string>
+    <string name="txt_view_new_user_title">Configurează un nou profil</string>
+    <string name="txt_view_user_lstNme_req">Numele este obligatoriu!</string>
+    <string name="txt_view_user_fstNme_req">Prenumele este obligatoriu!</string>
+    <string name="txt_view_user_country_req">Țara este obligatorie!</string>
+    <string name="txt_view_pfs_name_req">Numele sursei este obligatoriu!</string>
+    <string name="txt_view_pfs_category_req">Categoria este obligatorie!</string>
+    <string name="txt_view_star">*</string>
+    <string name="txt_view_config_finance_source">Poți configura una sau mai multe surse de venit.</string>
+    <string name="txt_view_pfs_category">Alege categoria din care face parte sursa configurată.</string>
+    <string name="txt_view_first_msg_income">Veniturile înregistrate în
+        ultima săptămână.\nPoți schimba perioada de afișare.</string>
+    <string name="txt_view_choose_category_income">Alege categoria venitului</string>
+    <string name="txt_view_choose_subcategory_income">Alege subcategoria venitului</string>
+    <string name="txt_view_recurrent_type">Este aceasta o acțiune recurentă? </string>
+    <string name="txt_view_choose_pfs">Alege sursa de finanțare în care va ajunge acest venit</string>
+    <string name="txt_view_required_amount">Suma este obligatorie!</string>
+    <string name="txt_view_required_reg_date">Data înregistrării este obligatorie!</string>
+    <string name="txt_view_required_cat">Categoria este obligatorie!</string>
+    <string name="txt_view_required_subCat">Subcategoria este obligatorie!</string>
+    <string name="txt_view_required_psf">Sursa de finanțare este obligatorie!\nDacă încă nu ai configurat nicio sursă, te rugăm să o faci acum.</string>
+    <string name="txt_view_required_recurrency">Tipul acțiunii este obligatoriu!</string>
+    <string name="txt_view_required_dates">Ambele date trebuie selectate!</string>
+    <string name="txt_view_first_msg_expense">Cheltuielile înregistrate în
+        ultima săptămână.\nPoți schimba perioada de afișare.</string>
+    <string name="txt_view_choose_category_expense">Alege categoria cheltuielii</string>
+    <string name="txt_view_choose_subcategory_expense">Alege subcategoria cheltuielii</string>
+    <string name="txt_view_choose_pfs_expense">Alege sursa de finanțare din care a fost efectuată această cheltuială</string>
+    <string name="txt_view_message_balance">Balanța pentru perioada</string>
+    <string name="txt_view_message_income_sum">Suma rămasă</string>
+    <string name="txt_view_message_expense_sum">Suma cheltuită</string>
+    <string name="txt_view_message_change_period_bl">Poți modifica perioada pentru care se calculează balanța</string>
+    <string name="txt_view_firs_message_balance_profiles" > Analiza este realizată utilizând datele
+        diponibile din toate profilurile configurate</string>
+    <string name="txt_view_expense_result">S-a cheltuit cel mai mult pe</string>
+    <string name="txt_view_income_result">Au rămas cei mai mulți bani în</string>
+
+    <string name="btn_new_user">Configurează un nou profil</string>
+    <string name="btn_total_balance">Vezi analiza tuturor profilurilor</string>
+    <string name="btn_config_fin_source">Configurează-ți sursele de finanțare</string>
+    <string name="btn_goTo_incomes">Venituri</string>
+    <string name="btn_goTo_expense">Cheltuieli</string>
+    <string name="btn_add">Adaugă</string>
+    <string name="btn_add_pfs">Configurează</string>
+    <string name="btn_delete_yes">Da</string>
+    <string name="btn_delete_no">Nu</string>
+    <string name="btn_update">Actualizează</string>
+    <string name="btn_cancel">Anulează</string>
+    <string name="btn_change">Schimbă</string>
+    <string name="btn_regiter_new_income">Înregistrează un nou venit</string>
+    <string name="btn_regiter_new_expense">Înregistrează o nouă cheltuială</string>
+    <string name="btn_details">Detalii</string>
+
+
+
+
+
+</resources>

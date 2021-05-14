@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.doctorBudget">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SecondTry">
+        <activity
+            android:name="com.example.doctorBudget.Activities.BalanceOfAccountsActivity"
+            android:label="@string/title_activity_balance_of_accounts"
+            android:theme="@style/Theme.SecondTry.NoActionBar"></activity>
+        <activity
+            android:name="com.example.doctorBudget.Activities.ExpenseActivity"
+            android:label="@string/title_activity_expense"
+            android:theme="@style/Theme.SecondTry.NoActionBar" />
+        <activity
+            android:name="com.example.doctorBudget.Activities.FinaceSourceActivity"
+            android:label="@string/title_activity_financeSource"
+            android:theme="@style/Theme.SecondTry.NoActionBar" />
+        <activity
+            android:name="com.example.doctorBudget.Activities.IncomeActivity"
+            android:label="@string/title_activity_income"
+            android:theme="@style/Theme.SecondTry.NoActionBar" />
+        <activity
+            android:name="com.example.doctorBudget.Activities.BalanceActivity"
+            android:label="@string/title_activity_balance"
+            android:theme="@style/Theme.SecondTry.NoActionBar" />
+        <activity
+            android:name="com.example.doctorBudget.Activities.UserActivity"
+            android:label="@string/title_activity_user"
+            android:theme="@style/Theme.SecondTry.NoActionBar" />
+        <activity
+            android:name="com.example.doctorBudget.Activities.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.SecondTry.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
