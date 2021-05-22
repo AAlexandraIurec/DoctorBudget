@@ -24,4 +24,6 @@ public interface ExpenseSubcategoryDao {
 
     @Query("SELECT * FROM ExpenseSubcategory")
     List<ExpenseSubcategory> getAllExpenseSubategories();
+
+
 }

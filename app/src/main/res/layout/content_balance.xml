@@ -9,20 +9,22 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.doctorBudget.Activities.BalanceActivity">
 
-    <Button
-        android:id="@+id/btn_finance_sourse_config"
-        android:layout_width="wrap_content"
-        android:layout_height="58dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/btn_config_fin_source" />
 
     <LinearLayout
-        android:id="@+id/lin_lay_balance"
+        android:id="@+id/up_lin_lay_balance"
         android:layout_width="match_parent"
-        android:layout_height="459dp"
+        android:layout_height="527dp"
         android:layout_marginTop="15dp"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_finance_sourse_config"
+            android:layout_width="wrap_content"
+            android:layout_height="58dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/btn_config_fin_source" />
+
 
         <TextView
             android:id="@+id/txt_view_message_balance"
@@ -224,8 +226,20 @@
             android:layout_marginStart="25dp"
             android:text="@string/btn_goTo_incomes" />
 
-
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/down_lin_lay_balance"
+        android:layout_width="match_parent"
+        android:layout_height="662dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChartExp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

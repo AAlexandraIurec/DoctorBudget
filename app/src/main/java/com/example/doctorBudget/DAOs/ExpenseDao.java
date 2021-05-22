@@ -9,6 +9,7 @@ import androidx.room.Query;
 
 
 import com.example.doctorBudget.Entities.Expense;
+import com.example.doctorBudget.TopExpenses;
 
 import java.util.Date;
 import java.util.List;
@@ -43,4 +44,9 @@ public interface ExpenseDao {
 
     @Query("SELECT SUM(amount_exp) FROM Expense WHERE date_of_registration_exp between :date1 and :date2")
     double getExpenseSumByDates( Date date1, Date date2);
+
+    @Query("SELECT expenseSubcatName , SUM(amount_exp) AS sumAmountExpCat FROM Expense JOIN ExpenseSubcategory ON  " +
+            "subcat_expense_id_exp=ID_subCat_expense WHERE user_id_exp=:userID GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopExpenses> getExpensesTop(int userID);
 }
+
