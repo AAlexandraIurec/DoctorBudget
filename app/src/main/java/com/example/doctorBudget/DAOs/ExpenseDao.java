@@ -47,6 +47,10 @@ public interface ExpenseDao {
 
     @Query("SELECT expenseSubcatName , SUM(amount_exp) AS sumAmountExpCat FROM Expense JOIN ExpenseSubcategory ON  " +
             "subcat_expense_id_exp=ID_subCat_expense WHERE user_id_exp=:userID GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
-    List<TopExpenses> getExpensesTop(int userID);
+    List<TopExpenses> getExpensesTopByUser (int userID);
+
+    @Query("SELECT expenseSubcatName , SUM(amount_exp) AS sumAmountExpCat FROM Expense JOIN ExpenseSubcategory ON  " +
+            "subcat_expense_id_exp=ID_subCat_expense  GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopExpenses> getExpensesTop();
 }
 

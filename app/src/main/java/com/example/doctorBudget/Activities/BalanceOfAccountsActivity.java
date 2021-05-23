@@ -20,17 +20,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.doctorBudget.R;
+import com.example.doctorBudget.TopExpenses;
+import com.example.doctorBudget.TopPFSIncome;
+import com.example.doctorBudget.TopPSFExpense;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BalanceOfAccountsActivity extends AppCompatActivity {
@@ -40,10 +54,12 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
             txt_view_message_expense_sum_bl_prof,txt_view_message_income_sum_bl_prof,
             txt_view_expense_sum_bl_prof,txt_view_income_sum_bl_prof,txt_view_required_dates_bl_prof,
             txt_view_message_change_period_bl_prof, txt_view_firs_message_balance_profiles,
-            txt_view_expense_result_bl_prof;
+            txt_view_expense_result_bl_prof, txt_view_top_title_prof;
     EditText edt_txt_balance_prof_date_selection_1,edt_txt_balance_prof_date_selection_2;
-    Button btn_change_date_for_balance_prof, btn_details_balance_bl_prof;
-    LinearLayout lin_lay_balance_profiles;
+    Button btn_change_date_for_balance_prof, btn_details_balance_bl_prof, btn_switch_barChart_prof;
+    LinearLayout up_lin_lay_balance_profiles, down_lin_lay_balance_prof;
+    ImageView btn_close_details_prof;
+    BarChart barChartExpProf, barChartPFSProf;
 
     LocalDate today,dateNextMonth;
     int currentMonth, nextMonth, currentYear;
@@ -70,14 +86,23 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         txt_view_message_change_period_bl_prof = findViewById(R.id.txt_view_required_dates_bl_prof);
         txt_view_firs_message_balance_profiles = findViewById(R.id.txt_view_firs_message_balance_profiles);
         txt_view_expense_result_bl_prof = findViewById(R.id.txt_view_expense_result_bl_prof);
+        txt_view_top_title_prof = findViewById(R.id.txt_view_top_title_prof);
 
         edt_txt_balance_prof_date_selection_1 = findViewById(R.id.edt_txt_balance_prof_date_selection_1);
         edt_txt_balance_prof_date_selection_2 = findViewById(R.id.edt_txt_balance_prof_date_selection_2);
 
         btn_change_date_for_balance_prof = findViewById(R.id.btn_change_date_for_balance_prof);
         btn_details_balance_bl_prof = findViewById(R.id.btn_details_balance_bl_prof);
+        btn_switch_barChart_prof = findViewById(R.id.btn_switch_barChart_prof);
+        btn_close_details_prof = findViewById(R.id.btn_close_details_prof);
 
-        lin_lay_balance_profiles = findViewById(R.id.lin_lay_balance_profiles);
+        up_lin_lay_balance_profiles = findViewById(R.id.up_lin_lay_balance_profiles);
+        down_lin_lay_balance_prof = findViewById(R.id.down_lin_lay_balance_prof);
+
+        barChartExpProf = findViewById(R.id.barChartExpProf);
+        barChartPFSProf = findViewById(R.id.barChartPFSProf);
+
+        down_lin_lay_balance_prof.setVisibility(View.GONE);
 
         database = RoomDB.getInstance(this);
 
@@ -91,9 +116,40 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         btn_details_balance_bl_prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lin_lay_balance_profiles.setVisibility(View.GONE);
+                up_lin_lay_balance_profiles.setVisibility(View.GONE);
+                down_lin_lay_balance_prof.setVisibility(View.VISIBLE);
+                barChartPFSProf.setVisibility(View.GONE);
+                detailBalanceProf();
             }
         });
+
+        btn_close_details_prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                down_lin_lay_balance_prof.setVisibility(View.GONE);
+                up_lin_lay_balance_profiles.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btn_switch_barChart_prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btn_switch_barChart_prof.getText().equals(getResources().getString(R.string.btn_top_exp))){
+                    btn_switch_barChart_prof.setText(getResources().getString(R.string.btn_top_psf));
+                    txt_view_top_title_prof.setText(getResources().getString(R.string.txt_view_expense_top));
+                    barChartPFSProf.setVisibility(View.GONE);
+                    barChartExpProf.setVisibility(View.VISIBLE);
+                }else
+                {
+                    btn_switch_barChart_prof.setText(getResources().getString(R.string.btn_top_exp));
+                    txt_view_top_title_prof.setText(getResources().getString(R.string.txt_view_pfs_top));
+                    barChartExpProf.setVisibility(View.GONE);
+                    barChartPFSProf.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
 
         prepareDatesForInitialBalanceProf();
         getTheSumsProf(thisMonthQuery, nextMonthQuery);
@@ -211,6 +267,84 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         txt_view_this_month_bl_prof.setText(sSelectedDate2);
         txt_view_last_month_bl_prof.setText(sSelectedDate1);
 
+    }
+
+    public void detailBalanceProf(){
+        List<TopExpenses> expensesTopList;
+        List<TopPFSIncome> pfsIncomeTopList;
+        List<TopPSFExpense> pfsExpenseTopList;
+        expensesTopList= database.expenseDao().getExpensesTop();
+        createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
+        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTop();
+        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTop();
+        createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
+        createBarChartPFS(pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
+    }
+
+    public void createBarChartExp(List<TopExpenses> expensesTopList, String chartLabel){
+        ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
+        ArrayList<String> labelsNames = new ArrayList<>();
+        for(int i=0;i<expensesTopList.size();i++) {
+            barEntryArrayList.add(new BarEntry(i, expensesTopList.get(i).getSumAmountExpCat().floatValue()));
+            labelsNames.add(expensesTopList.get(i).getExpenseSubcatName());
+        }
+        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, chartLabel+"  (Lei)");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        Description description = new Description();
+        description.setText("");
+        barChartExpProf.setDescription(description);
+        BarData barData = new BarData(barDataSet);
+        barChartExpProf.setData(barData);
+
+        XAxis xAxis = barChartExpProf.getXAxis();
+        xAxis.setValueFormatter( new IndexAxisValueFormatter(labelsNames));
+
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(labelsNames.size());
+        xAxis.setLabelRotationAngle(320);
+
+        barChartExpProf.getXAxis().setTextSize(13f);
+        barDataSet.setValueTextSize(16f);
+    }
+
+    public void createBarChartPFS(List<TopPFSIncome> pfsIncomeTopList, List<TopPSFExpense> pfsExpenseTopList, String chartLabel){
+        ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
+        ArrayList<String> labelsNames = new ArrayList<>();
+        double restSum=0;
+        for(int i=0;i<pfsIncomeTopList.size();i++) {
+            for (int j=0;j<pfsExpenseTopList.size();j++){
+                if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID())
+                    restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
+                else
+                    restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
+            }
+            barEntryArrayList.add(new BarEntry(i, (float) restSum));
+            labelsNames.add(pfsIncomeTopList.get(i).getPfsName());
+        }
+
+        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, chartLabel+"  (Lei)");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        Description description = new Description();
+        description.setText("");
+        barChartPFSProf.setDescription(description);
+        BarData barData = new BarData(barDataSet);
+        barChartPFSProf.setData(barData);
+
+        XAxis xAxis = barChartPFSProf.getXAxis();
+        xAxis.setValueFormatter( new IndexAxisValueFormatter(labelsNames));
+
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(labelsNames.size());
+        xAxis.setLabelRotationAngle(320);
+
+        barChartPFSProf.getXAxis().setTextSize(13f);
+        barDataSet.setValueTextSize(16f);
     }
 
     @Override

@@ -154,7 +154,6 @@ public class BalanceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 up_lin_lay_balance.setVisibility(View.GONE);
                 down_lin_lay_balance.setVisibility(View.VISIBLE);
-                barChartPFS.setVisibility(View.GONE);
                 detailBalance(user_id);
             }
         });
@@ -312,9 +311,9 @@ public class BalanceActivity extends AppCompatActivity {
         List<TopExpenses> expensesTopList;
         List<TopPFSIncome> pfsIncomeTopList;
         List<TopPSFExpense> pfsExpenseTopList;
-        expensesTopList= database.expenseDao().getExpensesTop(userID);
-        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTop(userID);
-        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTop(userID);
+        expensesTopList= database.expenseDao().getExpensesTopByUser(userID);
+        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTopByUser(userID);
+        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTopByUser(userID);
         createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
         createBarChartPFS(pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
 

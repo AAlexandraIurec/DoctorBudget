@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:id="@+id/lin_lay_balance_profiles"
+        android:id="@+id/up_lin_lay_balance_profiles"
         android:layout_width="match_parent"
         android:layout_height="572dp"
         android:layout_marginTop="20dp"
@@ -199,7 +199,65 @@
 
     </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/down_lin_lay_balance_prof"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:layout_marginTop="30dp"
+            android:background="#F2E7F4"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#F2E7F4"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_switch_barChart_prof"
+                    android:layout_width="290dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/btn_top_psf"
+                    android:textColor="#575050"
+                    android:textSize="12dp"
+                    app:backgroundTint="#C8B2CC" />
+
+                <ImageView
+                    android:id="@+id/btn_close_details_prof"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="55dp"
+                    android:src="@drawable/ic_close" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/txt_view_top_title_prof"
+                android:layout_width="370dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/txt_view_expense_top"
+                android:textAlignment="center"
+                android:textColor="#761387"
+                android:textSize="18sp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_marginTop="10dp"
+                android:id="@+id/barChartExpProf"
+                android:layout_width="match_parent"
+                android:layout_height="437dp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_marginTop="10dp"
+                android:id="@+id/barChartPFSProf"
+                android:layout_width="match_parent"
+                android:layout_height="437dp" />
+
+        </LinearLayout>
 
 
 </LinearLayout>
