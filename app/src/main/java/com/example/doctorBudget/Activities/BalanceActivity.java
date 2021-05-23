@@ -14,12 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.R;
 import com.example.doctorBudget.TopExpenses;
+import com.example.doctorBudget.TopPFSIncome;
+import com.example.doctorBudget.TopPSFExpense;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -41,14 +44,15 @@ public class BalanceActivity extends AppCompatActivity {
 
     RoomDB database;
     Button btn_new_income, btn_finance_source, btn_new_expense, btn_change_date_for_balance,
-            btn_details_balance;
+            btn_details_balance, btn_switch_barChart;
     TextView txt_view_message_balance,txt_view_last_month_bal, txt_view_this_month_bal,
             txt_view_message_expense_sum, txt_view_message_income_sum, txt_view_expense_sum,
             txt_view_income_sum, txt_view_required_dates_bl,txt_view_expense_result,
-            txt_view_income_result;
+            txt_view_top_title;
     EditText edt_txt_balance_date_selection_1,edt_txt_balance_date_selection_2;
     LinearLayout up_lin_lay_balance, down_lin_lay_balance;
-    BarChart barChartExp;
+    BarChart barChartExp, barChartPFS;
+    ImageView btn_close_details;
 
     int user_id = 0;
     String user_country ="country" ,sSelectedDate1="",sSelectedDate2="", currency;
@@ -78,6 +82,8 @@ public class BalanceActivity extends AppCompatActivity {
         btn_new_expense=findViewById(R.id.btn_new_expense);
         btn_change_date_for_balance = findViewById(R.id.btn_change_date_for_balance);
         btn_details_balance = findViewById(R.id.btn_details_balance);
+        btn_switch_barChart= findViewById(R.id.btn_switch_barChart);
+        btn_close_details = findViewById(R.id.btn_close_details);
 
         txt_view_message_balance = findViewById(R.id.txt_view_message_balance);
         txt_view_this_month_bal=findViewById(R.id.txt_view_this_month_bal);
@@ -88,7 +94,7 @@ public class BalanceActivity extends AppCompatActivity {
         txt_view_expense_sum = findViewById(R.id.txt_view_expense_sum);
         txt_view_required_dates_bl = findViewById(R.id.txt_view_required_dates_bl);
         txt_view_expense_result = findViewById(R.id.txt_view_expense_result);
-        txt_view_income_result = findViewById(R.id.txt_view_income_result);
+        txt_view_top_title = findViewById(R.id.txt_view_top_title);
 
         edt_txt_balance_date_selection_1 = findViewById(R.id.edt_txt_balance_date_selection_1);
         edt_txt_balance_date_selection_2 = findViewById(R.id.edt_txt_balance_date_selection_2);
@@ -97,6 +103,7 @@ public class BalanceActivity extends AppCompatActivity {
         down_lin_lay_balance =findViewById(R.id.down_lin_lay_balance);
 
         barChartExp = findViewById(R.id.barChartExp);
+        barChartPFS = findViewById(R.id.barChartPFS);
 
         down_lin_lay_balance.setVisibility(View.GONE);
 
@@ -147,7 +154,35 @@ public class BalanceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 up_lin_lay_balance.setVisibility(View.GONE);
                 down_lin_lay_balance.setVisibility(View.VISIBLE);
+                barChartPFS.setVisibility(View.GONE);
                 detailBalance(user_id);
+            }
+        });
+
+        btn_close_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                down_lin_lay_balance.setVisibility(View.GONE);
+                up_lin_lay_balance.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btn_switch_barChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btn_switch_barChart.getText().equals(getResources().getString(R.string.btn_top_exp))){
+                    btn_switch_barChart.setText(getResources().getString(R.string.btn_top_psf));
+                    txt_view_top_title.setText(getResources().getString(R.string.txt_view_expense_top));
+                    barChartPFS.setVisibility(View.GONE);
+                    barChartExp.setVisibility(View.VISIBLE);
+                }else
+                {
+                    btn_switch_barChart.setText(getResources().getString(R.string.btn_top_exp));
+                    txt_view_top_title.setText(getResources().getString(R.string.txt_view_pfs_top));
+                    barChartExp.setVisibility(View.GONE);
+                    barChartPFS.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
@@ -275,23 +310,27 @@ public class BalanceActivity extends AppCompatActivity {
 
     public void detailBalance (int userID){
         List<TopExpenses> expensesTopList;
+        List<TopPFSIncome> pfsIncomeTopList;
+        List<TopPSFExpense> pfsExpenseTopList;
         expensesTopList= database.expenseDao().getExpensesTop(userID);
-        createBarChartExp(expensesTopList);
-
+        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTop(userID);
+        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTop(userID);
+        createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
+        createBarChartPFS(pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
 
     }
 
-    public void createBarChartExp(List<TopExpenses> expensesTopList){
+    public void createBarChartExp(List<TopExpenses> expensesTopList, String chartLabel){
         ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
         ArrayList<String> labelsNames = new ArrayList<>();
         for(int i=0;i<expensesTopList.size();i++) {
             barEntryArrayList.add(new BarEntry(i, expensesTopList.get(i).getSumAmountExpCat().floatValue()));
             labelsNames.add(expensesTopList.get(i).getExpenseSubcatName());
         }
-        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Topul subcategoriilor de cheltuieli și sumele aferente acestora ("+currency+")");
+        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, chartLabel+"  ("+currency+")");
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         Description description = new Description();
-        description.setText("Subcategorii");
+        description.setText("");
         barChartExp.setDescription(description);
         BarData barData = new BarData(barDataSet);
         barChartExp.setData(barData);
@@ -307,6 +346,43 @@ public class BalanceActivity extends AppCompatActivity {
         xAxis.setLabelRotationAngle(320);
 
         barChartExp.getXAxis().setTextSize(13f);
+        barDataSet.setValueTextSize(16f);
+    }
+
+    public void createBarChartPFS(List<TopPFSIncome> pfsIncomeTopList, List<TopPSFExpense> pfsExpenseTopList, String chartLabel){
+        ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
+        ArrayList<String> labelsNames = new ArrayList<>();
+        double restSum=0;
+        for(int i=0;i<pfsIncomeTopList.size();i++) {
+           for (int j=0;j<pfsExpenseTopList.size();j++){
+            if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID())
+                restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
+            else
+                restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
+           }
+            barEntryArrayList.add(new BarEntry(i, (float) restSum));
+            labelsNames.add(pfsIncomeTopList.get(i).getPfsName());
+        }
+
+        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, chartLabel+"  ("+currency+")");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        Description description = new Description();
+        description.setText("");
+        barChartPFS.setDescription(description);
+        BarData barData = new BarData(barDataSet);
+        barChartPFS.setData(barData);
+
+        XAxis xAxis = barChartPFS.getXAxis();
+        xAxis.setValueFormatter( new IndexAxisValueFormatter(labelsNames));
+
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(labelsNames.size());
+        xAxis.setLabelRotationAngle(320);
+
+        barChartPFS.getXAxis().setTextSize(13f);
         barDataSet.setValueTextSize(16f);
     }
 

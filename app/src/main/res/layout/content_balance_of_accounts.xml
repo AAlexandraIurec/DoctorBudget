@@ -184,16 +184,7 @@
                 android:textColor="#761387"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/txt_view_income_result_bl_prof"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/txt_view_income_result"
-                android:textAlignment="center"
-                android:textColor="#3F51B5"
-                android:textSize="18sp" />
+
 
             <Button
                 android:id="@+id/btn_details_balance_bl_prof"

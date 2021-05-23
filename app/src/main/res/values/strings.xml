@@ -63,8 +63,9 @@
     <string name="txt_view_message_change_period_bl">Poți modifica perioada pentru care se calculează balanța</string>
     <string name="txt_view_firs_message_balance_profiles" > Analiza este realizată utilizând datele
         diponibile din toate profilurile configurate</string>
-    <string name="txt_view_expense_result">S-a cheltuit cel mai mult pe</string>
-    <string name="txt_view_income_result">Au rămas cei mai mulți bani în</string>
+    <string name="txt_view_expense_result">Obține detaliile despre topul subcategoriilor de cheltuieli și al surselor de finanțare </string>
+    <string name="txt_view_expense_top">Top 5 subcategorii cheltuieli</string>
+    <string name="txt_view_pfs_top">Top surse de finanțare</string>
 
     <string name="btn_new_user">Configurează un nou profil</string>
     <string name="btn_total_balance">Vezi analiza tuturor profilurilor</string>
@@ -81,7 +82,11 @@
     <string name="btn_regiter_new_income">Înregistrează un nou venit</string>
     <string name="btn_regiter_new_expense">Înregistrează o nouă cheltuială</string>
     <string name="btn_details">Detalii</string>
+    <string name="btn_top_psf">Vezi topul surselor de finanțare</string>
+    <string name="btn_top_exp">Vezi topul cheltuielilor</string>
 
+    <string name="expChart_label">Sumele aferente subcategoriilor pentru perioada stabilită </string>
+    <string name="pfsChart_label">Sumele rămase în sursele de finanțare pentru perioada stabilită </string>
 
 
 

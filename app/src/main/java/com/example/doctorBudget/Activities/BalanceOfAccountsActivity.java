@@ -40,7 +40,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
             txt_view_message_expense_sum_bl_prof,txt_view_message_income_sum_bl_prof,
             txt_view_expense_sum_bl_prof,txt_view_income_sum_bl_prof,txt_view_required_dates_bl_prof,
             txt_view_message_change_period_bl_prof, txt_view_firs_message_balance_profiles,
-            txt_view_income_result_bl_prof, txt_view_expense_result_bl_prof;
+            txt_view_expense_result_bl_prof;
     EditText edt_txt_balance_prof_date_selection_1,edt_txt_balance_prof_date_selection_2;
     Button btn_change_date_for_balance_prof, btn_details_balance_bl_prof;
     LinearLayout lin_lay_balance_profiles;
@@ -69,7 +69,6 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         txt_view_required_dates_bl_prof = findViewById(R.id.txt_view_required_dates_bl_prof);
         txt_view_message_change_period_bl_prof = findViewById(R.id.txt_view_required_dates_bl_prof);
         txt_view_firs_message_balance_profiles = findViewById(R.id.txt_view_firs_message_balance_profiles);
-        txt_view_income_result_bl_prof = findViewById(R.id.txt_view_income_result_bl_prof);
         txt_view_expense_result_bl_prof = findViewById(R.id.txt_view_expense_result_bl_prof);
 
         edt_txt_balance_prof_date_selection_1 = findViewById(R.id.edt_txt_balance_prof_date_selection_1);

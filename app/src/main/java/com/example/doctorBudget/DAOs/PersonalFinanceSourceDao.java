@@ -9,6 +9,8 @@ import androidx.room.Query;
 
 
 import com.example.doctorBudget.Entities.PersonalFinanceSource;
+import com.example.doctorBudget.TopPFSIncome;
+import com.example.doctorBudget.TopPSFExpense;
 
 import java.util.Date;
 import java.util.List;
@@ -41,5 +43,15 @@ public interface PersonalFinanceSourceDao {
 
     @Query("SELECT finance_source_id FROM PersonalFinanceSource WHERE finance_source_name=:psf_name")
     int getIDFinanceSource (String psf_name);
+
+    @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_inc) AS sumAmountInc " +
+            "FROM PersonalFinanceSource JOIN Income ON finance_source_id = finance_source_id_inc " +
+            "WHERE user_id_pfs =:userID GROUP BY finance_source_id_inc ORDER BY  SUM(amount_inc) DESC LIMIT 5")
+    List<TopPFSIncome> getPFSIncomeTop (int userID);
+
+    @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_exp) AS sumAmountExp " +
+            "FROM PersonalFinanceSource JOIN Expense ON finance_source_id = finance_source_id_exp " +
+            "WHERE user_id_pfs =:userID GROUP BY finance_source_id_exp ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopPSFExpense> getPFSExpenseTop (int userID);
 
 }
