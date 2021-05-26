@@ -1,14 +1,9 @@
 package com.example.doctorBudget.Activities;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import com.example.doctorBudget.RecycleViewUsersAdaptor;
+import com.example.doctorBudget.RecycleViews.RecycleViewUsersAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Country;
 import com.example.doctorBudget.Entities.Currency;
@@ -25,21 +20,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 

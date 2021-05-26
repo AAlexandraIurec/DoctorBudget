@@ -86,7 +86,12 @@
     <string name="btn_top_exp">Vezi topul cheltuielilor</string>
 
     <string name="expChart_label">Sumele aferente subcategoriilor pentru perioada stabilită </string>
-    <string name="pfsChart_label">Sumele rămase în sursele de finanțare pentru perioada stabilită </string>
+    <string name="pfsChart_label">Sumele rămase în sursele de finanțare în perioada stabilită </string>
+
+    <string name="notifyExpenseSet"> Veți primi o notificare în legătură cu această cheltuială recurentă luna următoare</string>
+    <string name="notifyIncomeSet">Veți primi o notificare în legătură cu aceast venit recurent luna următoare</string>
+    <string name="notifyExpenseText">Aveți o cheltuială recurentă în această zi!</string>
+    <string name="notifyIncomeText">Aveți un venit recurent în această zi!</string>
 
 
 

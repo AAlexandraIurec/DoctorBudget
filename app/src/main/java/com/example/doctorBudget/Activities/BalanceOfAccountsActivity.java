@@ -64,7 +64,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
     LocalDate today,dateNextMonth;
     int currentMonth, nextMonth, currentYear;
     Date thisMonthQuery, nextMonthQuery, selectedDate1,selectedDate2;
-    double incomeSum,expenseSum,ramainingSum;
+    double incomeSum,expenseSumForPeriod,ramainingSum, expenseSumFromBeginning;
     String sSelectedDate1="",sSelectedDate2="";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -152,7 +152,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
 
 
         prepareDatesForInitialBalanceProf();
-        getTheSumsProf(thisMonthQuery, nextMonthQuery);
+        getTheSumsProf(thisMonthQuery,thisMonthQuery, nextMonthQuery);
         prepareCalendar(edt_txt_balance_prof_date_selection_1);
         prepareCalendar(edt_txt_balance_prof_date_selection_2);
     }
@@ -200,13 +200,17 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        selectedDate1 = thisMonthQuery;
+        selectedDate2 = nextMonthQuery;
     }
 
-    public void getTheSumsProf(Date date1, Date date2){
-        incomeSum = database.incomeDao().getIncomeSumByDates(date1,date2);
-        expenseSum = database.expenseDao().getExpenseSumByDates(date1,date2);
-        ramainingSum = incomeSum-expenseSum;
-        String sExpenseSum=String.valueOf(expenseSum)+ " Lei";
+    public void getTheSumsProf(Date firstDayOfMonth,Date date1, Date date2){
+        incomeSum = database.incomeDao().getIncomeSumByDates(firstDayOfMonth,date2);
+        expenseSumForPeriod = database.expenseDao().getExpenseSumByDates(date1,date2);
+        expenseSumFromBeginning = database.expenseDao().getExpenseSumByDates(firstDayOfMonth,date2);
+        ramainingSum = incomeSum-expenseSumFromBeginning;
+        String sExpenseSum=String.valueOf(expenseSumForPeriod)+ " Lei";
         String sRamainingSum = String.valueOf(ramainingSum)+ " Lei";
         txt_view_income_sum_bl_prof.setText(sRamainingSum);
         txt_view_expense_sum_bl_prof.setText(sExpenseSum);
@@ -257,7 +261,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if(!sSelectedDate1.equals("") && !sSelectedDate2.equals("")){
-            getTheSumsProf(selectedDate1,selectedDate2);
+            getTheSumsProf(thisMonthQuery,selectedDate1,selectedDate2);
             txt_view_required_dates_bl_prof.setText("");
         }
         else
@@ -273,10 +277,10 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         List<TopExpenses> expensesTopList;
         List<TopPFSIncome> pfsIncomeTopList;
         List<TopPSFExpense> pfsExpenseTopList;
-        expensesTopList= database.expenseDao().getExpensesTop();
+        expensesTopList= database.expenseDao().getExpensesTop(selectedDate1, selectedDate2);
         createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
-        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTop();
-        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTop();
+        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTop(thisMonthQuery,selectedDate2);
+        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTop(thisMonthQuery,selectedDate2);
         createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
         createBarChartPFS(pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
     }
@@ -314,11 +318,13 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
         ArrayList<String> labelsNames = new ArrayList<>();
         double restSum=0;
+        int ok=0;
         for(int i=0;i<pfsIncomeTopList.size();i++) {
             for (int j=0;j<pfsExpenseTopList.size();j++){
-                if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID())
+                if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID()) {
                     restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
-                else
+                    ok=1;
+                }else if(ok==0)
                     restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
             }
             barEntryArrayList.add(new BarEntry(i, (float) restSum));

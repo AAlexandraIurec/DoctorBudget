@@ -29,8 +29,6 @@ public interface IncomeDao {
     void updateIncome(double incAmount, Date incRegDate, int incReccurent, String incNote,
                       Bitmap incAttachment,int incSubCat, int incFinaceSource, int incUserID, int incID);
 
-
-
     @Query("SELECT income_id, amount_inc,date_of_registration_inc,finance_source_id_inc,user_id_inc," +
             " recurrent_inc,subcat_income_id_inc FROM Income")
     List<Income> getAllIncomes();

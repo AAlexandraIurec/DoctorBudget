@@ -1,4 +1,4 @@
-package com.example.doctorBudget;
+package com.example.doctorBudget.RecycleViews;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -21,8 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.doctorBudget.Entities.Expense;
-import com.example.doctorBudget.Entities.Income;
 import com.example.doctorBudget.R;
+import com.example.doctorBudget.RoomDB;
 
 import java.text.DateFormat;
 import java.text.ParseException;

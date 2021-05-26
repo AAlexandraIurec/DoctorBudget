@@ -59,7 +59,7 @@ public class BalanceActivity extends AppCompatActivity {
     LocalDate today,dateNextMonth;
     int currentMonth, nextMonth, currentYear;
     Date thisMonthQuery, nextMonthQuery, selectedDate1,selectedDate2;
-    double incomeSum,expenseSum,ramainingSum;
+    double incomeSum,expenseSumForPeriod,ramainingSum, expenseSumFromBeginning;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -108,7 +108,7 @@ public class BalanceActivity extends AppCompatActivity {
         down_lin_lay_balance.setVisibility(View.GONE);
 
         prepareDatesForInitialBalance();
-        getTheSums(thisMonthQuery,nextMonthQuery);
+        getTheSums(thisMonthQuery,thisMonthQuery,nextMonthQuery);
         prepareCalendar(edt_txt_balance_date_selection_1);
         prepareCalendar(edt_txt_balance_date_selection_2);
         currency = getCurrency();
@@ -231,13 +231,16 @@ public class BalanceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        selectedDate1 = thisMonthQuery;
+        selectedDate2 = nextMonthQuery;
     }
 
-    public void getTheSums(Date date1, Date date2){
-        incomeSum = database.incomeDao().getIncomeSumByDatesAndUser(user_id,date1,date2);
-        expenseSum = database.expenseDao().getExpenseSumByDatesAndUser(user_id,date1,date2);
-        ramainingSum = incomeSum-expenseSum;
-        String sExpenseSum=String.valueOf(expenseSum)+" "+ currency;
+    public void getTheSums(Date firstDayOfMontth, Date date1, Date date2){
+        incomeSum = database.incomeDao().getIncomeSumByDatesAndUser(user_id,firstDayOfMontth,date2);
+        expenseSumForPeriod = database.expenseDao().getExpenseSumByDatesAndUser(user_id,date1,date2);
+        expenseSumFromBeginning = database.expenseDao().getExpenseSumByDatesAndUser(user_id,firstDayOfMontth,date2);
+        ramainingSum = incomeSum-expenseSumFromBeginning ;
+        String sExpenseSum=String.valueOf(expenseSumForPeriod)+" "+ currency;
         String sRamainingSum = String.valueOf(ramainingSum) +" "+ currency;
         txt_view_income_sum.setText(sRamainingSum);
         txt_view_expense_sum.setText(sExpenseSum);
@@ -294,7 +297,7 @@ public class BalanceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if(!sSelectedDate1.equals("") && !sSelectedDate2.equals("")){
-            getTheSums(selectedDate1,selectedDate2);
+            getTheSums(thisMonthQuery,selectedDate1,selectedDate2);
             txt_view_required_dates_bl.setText("");
         }
         else
@@ -311,11 +314,11 @@ public class BalanceActivity extends AppCompatActivity {
         List<TopExpenses> expensesTopList;
         List<TopPFSIncome> pfsIncomeTopList;
         List<TopPSFExpense> pfsExpenseTopList;
-        expensesTopList= database.expenseDao().getExpensesTopByUser(userID);
-        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTopByUser(userID);
-        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTopByUser(userID);
+        expensesTopList= database.expenseDao().getExpensesTopByUser(userID,selectedDate1,selectedDate2);
+        pfsIncomeTopList=database.personalFinanceSourceDao().getPFSIncomeTopByUser(userID,thisMonthQuery,selectedDate2);
+        pfsExpenseTopList=database.personalFinanceSourceDao().getPFSExpenseTopByUser(userID,thisMonthQuery,selectedDate2);
         createBarChartExp(expensesTopList,getResources().getString(R.string.expChart_label));
-        createBarChartPFS(pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
+        createBarChartPFSUser (pfsIncomeTopList,pfsExpenseTopList,getResources().getString(R.string.pfsChart_label));
 
     }
 
@@ -348,15 +351,17 @@ public class BalanceActivity extends AppCompatActivity {
         barDataSet.setValueTextSize(16f);
     }
 
-    public void createBarChartPFS(List<TopPFSIncome> pfsIncomeTopList, List<TopPSFExpense> pfsExpenseTopList, String chartLabel){
+    public void createBarChartPFSUser(List<TopPFSIncome> pfsIncomeTopList, List<TopPSFExpense> pfsExpenseTopList, String chartLabel){
         ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
         ArrayList<String> labelsNames = new ArrayList<>();
         double restSum=0;
+        int ok=0;
         for(int i=0;i<pfsIncomeTopList.size();i++) {
            for (int j=0;j<pfsExpenseTopList.size();j++){
-            if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID())
+            if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID()) {
                 restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
-            else
+                ok=1;
+            }else if(ok==0)
                 restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
            }
             barEntryArrayList.add(new BarEntry(i, (float) restSum));
@@ -389,11 +394,11 @@ public class BalanceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(!sSelectedDate1.equals("") && !sSelectedDate2.equals("")){
-            getTheSums(selectedDate1,selectedDate2);
+            getTheSums(thisMonthQuery,selectedDate1,selectedDate2);
        }
         else
         {
-            getTheSums(thisMonthQuery,nextMonthQuery);
+            getTheSums(thisMonthQuery,thisMonthQuery,nextMonthQuery);
         }
 
     }

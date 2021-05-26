@@ -1,21 +1,24 @@
 package com.example.doctorBudget.Activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +34,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.doctorBudget.RecycleViewExpenseAdaptor;
+import com.example.doctorBudget.RecycleViews.RecycleViewExpenseAdaptor;
+import com.example.doctorBudget.ReminderBroadcast;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Expense;
 import com.example.doctorBudget.R;
@@ -44,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ExpenseActivity extends AppCompatActivity {
 
@@ -74,6 +77,7 @@ public class ExpenseActivity extends AppCompatActivity {
     RecycleViewExpenseAdaptor expenseAdaptor;
     RecyclerView recyclerViewExpense;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,6 +198,7 @@ public class ExpenseActivity extends AppCompatActivity {
 
         expenseList = database.expenseDao().getAllExpensesByDates(userID,sevenDaysBefore,today);
         configRecyclerViewExpenseAndSetAdapter();
+        createNotificationChanel();
 
 
     }
@@ -399,6 +404,19 @@ public class ExpenseActivity extends AppCompatActivity {
             sRecurrency = radio_gen.getText().toString();
             if(sRecurrency.equals("Da")){
                 intRecurrecy=1;
+                Toast.makeText(ExpenseActivity.this, getResources().getString(R.string.notifyExpenseSet), Toast.LENGTH_LONG).show();
+
+                Intent notifyExpenseIntent = new Intent(ExpenseActivity.this, ReminderBroadcast.class);
+                notifyExpenseIntent.putExtra("message", getResources().getString(R.string.notifyExpenseText));
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(ExpenseActivity.this, 0, notifyExpenseIntent, 0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                long timeAtButtonClick = System.currentTimeMillis();
+
+                long tenSecondsInMillis = 1000*30*24*60*60;
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + tenSecondsInMillis, pendingIntent);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -518,6 +536,21 @@ public class ExpenseActivity extends AppCompatActivity {
         txt_view_required_subCat_expense.setText(getResources().getString(R.string.txt_view_star));
         txt_view_required_psf_expense.setText(getResources().getString(R.string.txt_view_star));
         txt_view_required_recurrency_expense.setText(getResources().getString(R.string.txt_view_star));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("ObsoleteSdkInt")
+    public void createNotificationChanel () {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) {
+            CharSequence name = "DoctorBudgetReminderChannel";
+            String description = "Channel for Doctor Budget";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyDoctorBudget", name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override

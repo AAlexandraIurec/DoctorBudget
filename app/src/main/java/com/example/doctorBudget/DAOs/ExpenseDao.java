@@ -46,11 +46,13 @@ public interface ExpenseDao {
     double getExpenseSumByDates( Date date1, Date date2);
 
     @Query("SELECT expenseSubcatName , SUM(amount_exp) AS sumAmountExpCat FROM Expense JOIN ExpenseSubcategory ON  " +
-            "subcat_expense_id_exp=ID_subCat_expense WHERE user_id_exp=:userID GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
-    List<TopExpenses> getExpensesTopByUser (int userID);
+            "subcat_expense_id_exp=ID_subCat_expense WHERE user_id_exp=:userID AND date_of_registration_exp between :date1 and :date2 " +
+            "GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopExpenses> getExpensesTopByUser (int userID, Date date1, Date date2);
 
     @Query("SELECT expenseSubcatName , SUM(amount_exp) AS sumAmountExpCat FROM Expense JOIN ExpenseSubcategory ON  " +
-            "subcat_expense_id_exp=ID_subCat_expense  GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
-    List<TopExpenses> getExpensesTop();
+            "subcat_expense_id_exp=ID_subCat_expense  WHERE date_of_registration_exp between :date1 and :date2 " +
+            " GROUP BY (subcat_expense_id_exp) ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopExpenses> getExpensesTop(Date date1, Date date2);
 }
 

@@ -6,11 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +15,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.doctorBudget.RecycleViewPersFinanceSourceAdaptor;
+import com.example.doctorBudget.RecycleViews.RecycleViewPersFinanceSourceAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.PersonalFinanceSource;
 
@@ -29,7 +24,6 @@ import com.example.doctorBudget.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class FinaceSourceActivity extends AppCompatActivity {
 

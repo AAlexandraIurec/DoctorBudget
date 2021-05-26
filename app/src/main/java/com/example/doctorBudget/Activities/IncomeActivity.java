@@ -1,21 +1,24 @@
 package com.example.doctorBudget.Activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +34,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.doctorBudget.RecycleViewIncomeAdaptor;
+import com.example.doctorBudget.RecycleViews.RecycleViewIncomeAdaptor;
+import com.example.doctorBudget.ReminderBroadcast;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Income;
 import com.example.doctorBudget.R;
@@ -44,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class IncomeActivity extends AppCompatActivity {
 
@@ -395,6 +398,19 @@ public class IncomeActivity extends AppCompatActivity {
             sRecurrency = radio_gen.getText().toString();
             if(sRecurrency.equals("Da")){
                 intRecurrecy=1;
+                Toast.makeText(IncomeActivity.this, getResources().getString(R.string.notifyIncomeSet), Toast.LENGTH_LONG).show();
+
+                Intent notifyIncomeIntent = new Intent(IncomeActivity.this, ReminderBroadcast.class);
+                notifyIncomeIntent.putExtra("message", getResources().getString(R.string.notifyIncomeText));
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(IncomeActivity.this, 0, notifyIncomeIntent, 0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                long timeAtButtonClick = System.currentTimeMillis();
+
+                long tenSecondsInMillis = 1000*30*24*60*60;
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + tenSecondsInMillis, pendingIntent);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -515,6 +531,21 @@ public class IncomeActivity extends AppCompatActivity {
         txt_view_required_subCat_income.setText(getResources().getString(R.string.txt_view_star));
         txt_view_required_psf_income.setText(getResources().getString(R.string.txt_view_star));
         txt_view_required_recurrency_income.setText(getResources().getString(R.string.txt_view_star));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("ObsoleteSdkInt")
+    public void createNotificationChanel () {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) {
+            CharSequence name = "DoctorBudgetReminderChannel";
+            String description = "Channel for Doctor Budget";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyDoctorBudget", name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 

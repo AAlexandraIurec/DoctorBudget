@@ -46,22 +46,26 @@ public interface PersonalFinanceSourceDao {
 
     @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_inc) AS sumAmountInc " +
             "FROM PersonalFinanceSource JOIN Income ON finance_source_id = finance_source_id_inc " +
-            "WHERE user_id_pfs =:userID GROUP BY finance_source_id_inc ORDER BY  SUM(amount_inc) DESC LIMIT 5")
-    List<TopPFSIncome> getPFSIncomeTopByUser (int userID);
+            "WHERE user_id_pfs =:userID AND date_of_registration_inc between :date1 and :date2" +
+            " GROUP BY finance_source_id_inc ORDER BY  SUM(amount_inc) DESC LIMIT 5")
+    List<TopPFSIncome> getPFSIncomeTopByUser (int userID, Date date1, Date date2);
 
     @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_exp) AS sumAmountExp " +
             "FROM PersonalFinanceSource JOIN Expense ON finance_source_id = finance_source_id_exp " +
-            "WHERE user_id_pfs =:userID GROUP BY finance_source_id_exp ORDER BY  SUM(amount_exp) DESC LIMIT 5")
-    List<TopPSFExpense> getPFSExpenseTopByUser (int userID);
+            "WHERE user_id_pfs =:userID AND date_of_registration_exp between :date1 and :date2 " +
+            "GROUP BY finance_source_id_exp ORDER BY  SUM(amount_exp) DESC LIMIT 5")
+    List<TopPSFExpense> getPFSExpenseTopByUser (int userID, Date date1, Date date2);
 
     @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_inc) AS sumAmountInc " +
             "FROM PersonalFinanceSource JOIN Income ON finance_source_id = finance_source_id_inc " +
+            "WHERE date_of_registration_inc between :date1 and :date2 " +
             "GROUP BY finance_source_id_inc ORDER BY  SUM(amount_inc) DESC LIMIT 5")
-    List<TopPFSIncome> getPFSIncomeTop();
+    List<TopPFSIncome> getPFSIncomeTop(Date date1, Date date2);
 
     @Query("SELECT finance_source_id AS psfID, finance_source_name AS pfsName, SUM(amount_exp) AS sumAmountExp " +
             "FROM PersonalFinanceSource JOIN Expense ON finance_source_id = finance_source_id_exp " +
+            "WHERE date_of_registration_exp between :date1 and :date2" +
             " GROUP BY finance_source_id_exp ORDER BY  SUM(amount_exp) DESC LIMIT 5")
-    List<TopPSFExpense> getPFSExpenseTop ();
+    List<TopPSFExpense> getPFSExpenseTop (Date date1, Date date2);
 
 }

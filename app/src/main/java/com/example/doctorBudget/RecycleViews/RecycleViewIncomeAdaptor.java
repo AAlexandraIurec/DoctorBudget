@@ -1,10 +1,9 @@
-package com.example.doctorBudget;
+package com.example.doctorBudget.RecycleViews;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +19,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.TypeConverters;
 
-import com.example.doctorBudget.Entities.Converters;
 import com.example.doctorBudget.Entities.Income;
-import com.example.doctorBudget.Entities.User;
 import com.example.doctorBudget.R;
+import com.example.doctorBudget.RoomDB;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
