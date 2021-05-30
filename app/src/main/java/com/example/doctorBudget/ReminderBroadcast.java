@@ -22,7 +22,6 @@ public class ReminderBroadcast  extends BroadcastReceiver {
            message= extras.getString("message");
         }
 
-
         NotificationCompat.Builder expenseNotify= new NotificationCompat.Builder(context, "notifyDoctorBudget")
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle("Notificare Doctor Budget")

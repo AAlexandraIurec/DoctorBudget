@@ -199,8 +199,6 @@ public class ExpenseActivity extends AppCompatActivity {
         expenseList = database.expenseDao().getAllExpensesByDates(userID,sevenDaysBefore,today);
         configRecyclerViewExpenseAndSetAdapter();
         createNotificationChanel();
-
-
     }
 
     private void prepareDatesForSelectExpense (){
@@ -398,7 +396,7 @@ public class ExpenseActivity extends AppCompatActivity {
                 insertExpenseWithoutPicture(userID, expenseAmount, regDate, subcatID, psfID, intRecurrecy,
                         expenseNote);
             }
-            setNotificationExpense();
+            setExpenseNotification();
             form_add_expense.setVisibility(View.GONE);
             up_expense_activity_layout.setVisibility(View.VISIBLE);
             clearInputFields();
@@ -496,14 +494,14 @@ public class ExpenseActivity extends AppCompatActivity {
         txt_view_required_recurrency_expense.setText(getResources().getString(R.string.txt_view_star));
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    @SuppressLint("ObsoleteSdkInt")
-    public void createNotificationChanel () {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) {
+    public void createNotificationChanel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "DoctorBudgetReminderChannel";
             String description = "Channel for Doctor Budget";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("notifyDoctorBudget", name,importance);
+            NotificationChannel channel = new NotificationChannel("notifyDoctorBudget", name, importance);
             channel.setDescription(description);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -511,15 +509,18 @@ public class ExpenseActivity extends AppCompatActivity {
         }
     }
 
-    public void setNotificationExpense(){
-        Toast.makeText(ExpenseActivity.this, getResources().getString(R.string.notifyExpenseSet), Toast.LENGTH_LONG).show();
-        Intent notifyExpenseIntent = new Intent(ExpenseActivity.this, ReminderBroadcast.class);
-        notifyExpenseIntent.putExtra("message", getResources().getString(R.string.notifyExpenseText));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(ExpenseActivity.this, 0, notifyExpenseIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long timeAtButtonClick = System.currentTimeMillis();
-        long aMonthInMillis = 1000*30*24*60*60;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + aMonthInMillis, pendingIntent);
+    public void setExpenseNotification(){
+        Toast.makeText(this, getResources().getString(R.string.notifyExpenseSet), Toast.LENGTH_SHORT).show();
+
+        Intent intentNotifyExpense = new Intent(ExpenseActivity.this, ReminderBroadcast.class);
+        intentNotifyExpense.putExtra("message", getResources().getString(R.string.notifyExpenseText));
+        PendingIntent pendingIntentExpense = PendingIntent.getBroadcast(ExpenseActivity.this, 0, intentNotifyExpense,0);
+        AlarmManager alarmManagerExpense = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long currentTime = System.currentTimeMillis();
+        long milisInAHour = 60*60*1000;
+        long hoursInAMonth = 24*30;
+        alarmManagerExpense.set(AlarmManager.RTC_WAKEUP, (milisInAHour*hoursInAMonth)+currentTime, pendingIntentExpense);
     }
 
     @Override

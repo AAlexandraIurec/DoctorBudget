@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class IncomeActivity extends AppCompatActivity {
+public  class IncomeActivity extends AppCompatActivity {
 
     RoomDB database;
     List<String> incomeCategoryList = new ArrayList<>();
@@ -75,6 +75,9 @@ public class IncomeActivity extends AppCompatActivity {
     RecycleViewIncomeAdaptor incomeAdaptor;
     RecyclerView recyclerViewIncome;
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +199,8 @@ public class IncomeActivity extends AppCompatActivity {
 
         incomeList = database.incomeDao().getAllIncomesByDates(userID,sevenDaysBefore,today);
         configRecyclerViewIncomeAndSetAdapter();
+
+        createNotificationChanel();
 
     }
 
@@ -388,7 +393,7 @@ public class IncomeActivity extends AppCompatActivity {
                 insertIncomeWithoutPicture(userID, incomeAmount, regDate, subcatID, psfID, intRecurrecy,
                         incomeNote);
             }
-            setNotification();
+            setIncomeNotification();
             form_add_income.setVisibility(View.GONE);
             up_income_activity_layout.setVisibility(View.VISIBLE);
             clearInputFields();
@@ -491,7 +496,7 @@ public class IncomeActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("ObsoleteSdkInt")
     public void createNotificationChanel () {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR_0_1) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "DoctorBudgetReminderChannel";
             String description = "Channel for Doctor Budget";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -503,17 +508,18 @@ public class IncomeActivity extends AppCompatActivity {
         }
     }
 
-    public void setNotification (){
-        Toast.makeText(IncomeActivity.this, getResources().getString(R.string.notifyIncomeSet), Toast.LENGTH_LONG).show();
-        Intent notifyIncomeIntent = new Intent(IncomeActivity.this, ReminderBroadcast.class);
-        notifyIncomeIntent.putExtra("message", getResources().getString(R.string.notifyIncomeText));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(IncomeActivity.this, 0, notifyIncomeIntent, 0);
+    public void setIncomeNotification (){
+        Toast.makeText(this, getResources().getString(R.string.notifyIncomeSet), Toast.LENGTH_SHORT).show();
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intentNotifyIncome = new Intent(IncomeActivity.this,ReminderBroadcast.class);
+        intentNotifyIncome.putExtra("message",getResources().getString(R.string.notifyIncomeText));
+        PendingIntent pendingIntentIncome = PendingIntent.getBroadcast(IncomeActivity.this, 0 , intentNotifyIncome,0);
+        AlarmManager alarmManagerIncome = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        long timeAtButtonClick = System.currentTimeMillis();
-        long aMonthInMillis = 1000*30*24*60*60;
-        alarmManager.set(AlarmManager.RTC_WAKEUP,timeAtButtonClick + aMonthInMillis, pendingIntent);
+        long currentTime = System.currentTimeMillis();
+        long milisInAHour = 60*60*1000;
+        long hoursInAMonth = 24*30;
+        alarmManagerIncome.set(AlarmManager.RTC_WAKEUP, (milisInAHour*hoursInAMonth)+currentTime, pendingIntentIncome);
 
     }
 
