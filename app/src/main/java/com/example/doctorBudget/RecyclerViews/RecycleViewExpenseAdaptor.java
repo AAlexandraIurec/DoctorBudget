@@ -1,4 +1,4 @@
-package com.example.doctorBudget.RecycleViews;
+package com.example.doctorBudget.RecyclerViews;
 
 import android.app.Activity;
 import android.app.Dialog;

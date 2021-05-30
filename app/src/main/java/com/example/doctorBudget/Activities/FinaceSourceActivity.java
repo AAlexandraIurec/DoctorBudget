@@ -16,7 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.doctorBudget.RecycleViews.RecycleViewPersFinanceSourceAdaptor;
+import com.example.doctorBudget.RecyclerViews.RecycleViewPersFinanceSourceAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.PersonalFinanceSource;
 
@@ -164,11 +164,6 @@ public class FinaceSourceActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.btn_home) {
             Intent main_activity_intent = new Intent(FinaceSourceActivity.this, MainActivity.class);

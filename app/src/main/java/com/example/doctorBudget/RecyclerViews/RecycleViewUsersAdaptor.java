@@ -1,4 +1,4 @@
-package com.example.doctorBudget.RecycleViews;
+package com.example.doctorBudget.RecyclerViews;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUsersAdaptor.ViewHolder> {
 
-    //Initialize variable
+
     private List<User> userList;
     private Activity context;
     private RoomDB database;
@@ -42,21 +42,19 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
     @NonNull
     @Override
     public RecycleViewUsersAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_row_user, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_user, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewUsersAdaptor.ViewHolder holder, int position) {
-        //Initialize main data
+
         User user = userList.get(position);
-        //Initialize database
         database = RoomDB.getInstance(context);
-        //Set text on text view
 
         holder.txt_view_last_name.setText(user.getLastName());
         holder.txt_view_first_name.setText(user.getFirstName());
+
         try {
             Date birthDay = user.getDate_of_birth();
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -71,34 +69,23 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
             e.printStackTrace();
         }
 
-
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Initialize main data
+
                 User u = userList.get(holder.getAdapterPosition());
-                // Get id
                 int uID = u.getUserID();
-                // Get LastName
                 String uLastName = u.getLastName();
-                // Get FirstName
                 String uFirstName = u.getFirstName();
                 String uEmail = u.getEmail();
                 String uOccupation = u.getOccupation();
 
-                //Create dialog
                 Dialog dialog = new Dialog(context);
-                // Set content view
                 dialog.setContentView(R.layout.dialog_update_user);
-                //Initialize width
                 int width = WindowManager.LayoutParams.MATCH_PARENT;
-                //Initialize height
                 int height = WindowManager.LayoutParams.WRAP_CONTENT;
-                //Set layout
                 dialog.getWindow().setLayout(width, height);
-                //Show dialog
                 dialog.show();
-                //Initialize and assign variable
 
                 EditText edt_txt_last_name_upd = dialog.findViewById(R.id.edt_txt_last_name_upd);
                 EditText edt_txt_first_name_upd = dialog.findViewById(R.id.edt_txt_first_name_upd);
@@ -108,7 +95,6 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
                 Button btnUpdate = dialog.findViewById(R.id.btn_update);
                 Button btnCancelUpdate = dialog.findViewById(R.id.btn_cancel_update);
 
-                //Set text on edit text
                 edt_txt_last_name_upd.setText(uLastName);
                 edt_txt_first_name_upd.setText(uFirstName);
                 edt_txt_email_upd.setText(uEmail);
@@ -117,20 +103,15 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
                 btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Dismiss dialog
                         dialog.dismiss();
-                        //Get updated text from edit text
                         String up_txt_last_name = edt_txt_last_name_upd.getText().toString();
                         String up_txt_first_name = edt_txt_first_name_upd.getText().toString();
                         String up_txt_email = edt_txt_email_upd.getText().toString();
                         String up_txt_occupation = edt_txt_occupation_upd.getText().toString();
-                        //Update test in database
                         database.userDao().updateUser(uID, up_txt_last_name, up_txt_first_name,up_txt_email,up_txt_occupation);
-                        //Notify when data is updated
                         userList.clear();
-                        //data:
                         userList.addAll(database.userDao().getAllUsers());
-                       notifyDataSetChanged();
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -146,22 +127,13 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Initialize main data
                 User u = userList.get(holder.getAdapterPosition());
-
-                //Create dialog
                 Dialog dialog = new Dialog(context);
-                // Set content view
                 dialog.setContentView(R.layout.dialog_delete);
-                //Initialize width
                 int width = WindowManager.LayoutParams.MATCH_PARENT;
-                //Initialize height
                 int height = WindowManager.LayoutParams.WRAP_CONTENT;
-                //Set layout
                 dialog.getWindow().setLayout(width, height);
-                //Show dialog
                 dialog.show();
-                //Initialize and assign variable
 
                 TextView textViewDelete = dialog.findViewById(R.id.delete_view_text);
                 Button btnYes = dialog.findViewById(R.id.btn_yes_delete);
@@ -170,9 +142,7 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
                 btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Delete text from database
                         database.userDao().deleteUser(u);
-                        //Notify when data is deleted
                         int position = holder.getAdapterPosition();
                         userList.remove(position);
                         notifyItemRemoved(position);
@@ -190,8 +160,6 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
 
             }
         });
-
-
     }
 
     @Override
@@ -201,7 +169,6 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        //Initialize variable
         TextView txt_view_last_name, txt_view_first_name, txt_view_birthDay;
         ImageView btnEdit, btnDelete, img_user_profile;
 

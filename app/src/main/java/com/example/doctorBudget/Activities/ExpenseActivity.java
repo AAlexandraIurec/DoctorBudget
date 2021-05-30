@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +32,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.doctorBudget.RecycleViews.RecycleViewExpenseAdaptor;
+import com.example.doctorBudget.MyCalendar;
+import com.example.doctorBudget.RecyclerViews.RecycleViewExpenseAdaptor;
 import com.example.doctorBudget.ReminderBroadcast;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Expense;
@@ -45,7 +44,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -189,12 +187,14 @@ public class ExpenseActivity extends AppCompatActivity {
             }
         });
 
+        MyCalendar calendar = new MyCalendar();
+
         prepareDatesForSelectExpense();
         getValuesFromBundle();
         initializeAndPopulateRadioButtonsForCategoryExpense();
-        prepareCalendar(edt_txt_reg_date_expense);
-        prepareCalendar(edt_txt_expense_date_selection_1);
-        prepareCalendar(edt_txt_expense_date_selection_2);
+        calendar.prepareCalendar(edt_txt_reg_date_expense, ExpenseActivity.this);
+        calendar.prepareCalendar(edt_txt_expense_date_selection_1, ExpenseActivity.this);
+        calendar.prepareCalendar(edt_txt_expense_date_selection_2, ExpenseActivity.this);
 
         expenseList = database.expenseDao().getAllExpensesByDates(userID,sevenDaysBefore,today);
         configRecyclerViewExpenseAndSetAdapter();
@@ -307,36 +307,6 @@ public class ExpenseActivity extends AppCompatActivity {
         populatePersonalFinanceSourceSpinnerExp(userID);
     }
 
-    public void prepareCalendar(EditText edt_txt) {
-        //Working with the calendar
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        edt_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        ExpenseActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month+1;
-                        if(month < 10) {
-                            String sDate= dayOfMonth + "-" + "0" + month + "-" + year;
-                            edt_txt.setText(sDate);
-                        }
-                        else {
-                            String sDate = dayOfMonth + "-"  + month + "-" + year;
-                            edt_txt.setText(sDate);
-                        }
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
-            }
-
-        });
-    }
 
     //Obtain the image from intern memory of smartphone
     public void chooseImage (View objectView){
@@ -404,19 +374,6 @@ public class ExpenseActivity extends AppCompatActivity {
             sRecurrency = radio_gen.getText().toString();
             if(sRecurrency.equals("Da")){
                 intRecurrecy=1;
-                Toast.makeText(ExpenseActivity.this, getResources().getString(R.string.notifyExpenseSet), Toast.LENGTH_LONG).show();
-
-                Intent notifyExpenseIntent = new Intent(ExpenseActivity.this, ReminderBroadcast.class);
-                notifyExpenseIntent.putExtra("message", getResources().getString(R.string.notifyExpenseText));
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(ExpenseActivity.this, 0, notifyExpenseIntent, 0);
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-                long timeAtButtonClick = System.currentTimeMillis();
-
-                long tenSecondsInMillis = 1000*30*24*60*60;
-
-                alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + tenSecondsInMillis, pendingIntent);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -441,6 +398,7 @@ public class ExpenseActivity extends AppCompatActivity {
                 insertExpenseWithoutPicture(userID, expenseAmount, regDate, subcatID, psfID, intRecurrecy,
                         expenseNote);
             }
+            setNotificationExpense();
             form_add_expense.setVisibility(View.GONE);
             up_expense_activity_layout.setVisibility(View.VISIBLE);
             clearInputFields();
@@ -553,6 +511,17 @@ public class ExpenseActivity extends AppCompatActivity {
         }
     }
 
+    public void setNotificationExpense(){
+        Toast.makeText(ExpenseActivity.this, getResources().getString(R.string.notifyExpenseSet), Toast.LENGTH_LONG).show();
+        Intent notifyExpenseIntent = new Intent(ExpenseActivity.this, ReminderBroadcast.class);
+        notifyExpenseIntent.putExtra("message", getResources().getString(R.string.notifyExpenseText));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ExpenseActivity.this, 0, notifyExpenseIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long timeAtButtonClick = System.currentTimeMillis();
+        long aMonthInMillis = 1000*30*24*60*60;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + aMonthInMillis, pendingIntent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -566,11 +535,6 @@ public class ExpenseActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.btn_home) {
             Intent main_activity_intent = new Intent(ExpenseActivity.this, MainActivity.class);

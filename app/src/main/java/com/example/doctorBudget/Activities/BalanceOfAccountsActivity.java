@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.doctorBudget.MyCalendar;
 import com.example.doctorBudget.RoomDB;
 
 import androidx.annotation.RequiresApi;
@@ -150,11 +151,12 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
             }
         });
 
+        MyCalendar calendar = new MyCalendar();
 
         prepareDatesForInitialBalanceProf();
         getTheSumsProf(thisMonthQuery,thisMonthQuery, nextMonthQuery);
-        prepareCalendar(edt_txt_balance_prof_date_selection_1);
-        prepareCalendar(edt_txt_balance_prof_date_selection_2);
+        calendar.prepareCalendar(edt_txt_balance_prof_date_selection_1, BalanceOfAccountsActivity.this);
+        calendar.prepareCalendar(edt_txt_balance_prof_date_selection_2, BalanceOfAccountsActivity.this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -216,36 +218,6 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         txt_view_expense_sum_bl_prof.setText(sExpenseSum);
     }
 
-    public void prepareCalendar(EditText edt_txt) {
-        //Working with the calendar
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        edt_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        BalanceOfAccountsActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month+1;
-                        if(month < 10) {
-                            String sDate= dayOfMonth + "-" + "0" + month + "-" + year;
-                            edt_txt.setText(sDate);
-                        }
-                        else {
-                            String sDate = dayOfMonth + "-"  + month + "-" + year;
-                            edt_txt.setText(sDate);
-                        }
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
-            }
-
-        });
-    }
 
     private void changeDatesForBalanceProf(){
         sSelectedDate1 = edt_txt_balance_prof_date_selection_1.getText().toString();
@@ -367,10 +339,6 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.btn_home) {
             Intent main_activity_intent = new Intent(BalanceOfAccountsActivity.this, MainActivity.class);

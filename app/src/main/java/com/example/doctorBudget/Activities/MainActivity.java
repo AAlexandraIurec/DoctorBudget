@@ -3,7 +3,7 @@ package com.example.doctorBudget.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.doctorBudget.RecycleViews.RecycleViewUsersAdaptor;
+import com.example.doctorBudget.RecyclerViews.RecycleViewUsersAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Country;
 import com.example.doctorBudget.Entities.Currency;
@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -32,14 +30,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    RoomDB database;
+
     Button btn_new_user, btn_total_balance;
     TextView  txt_view_message;
-    RoomDB database;
 
     List<Currency>currencyList = new ArrayList<>();
     List<User>userList = new ArrayList<>();
-
-    String firstMessage, secondMessage;
 
     RecyclerView recyclerViewUsers;
     RecycleViewUsersAdaptor.RecyclerViewClickListener listener;
@@ -53,21 +50,20 @@ public class MainActivity extends AppCompatActivity {
 
         database = RoomDB.getInstance(this);
         userList = database.userDao().getAllUsers();
+        currencyList= database.currencyDao().getAllCurrencies();
 
-        initialInserts();
-        setInitialMessages();
-
-        configRecyclerViewUserAndSetAdapter();
+        txt_view_message = findViewById(R.id.txt_view_message_mainAC);
 
         btn_new_user =  findViewById(R.id.btn_new_user);
         btn_total_balance = findViewById(R.id.btn_total_balance);
 
+        recyclerViewUsers = findViewById(R.id.recycler_view_user);
 
         btn_new_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent user_activity_intent = new Intent(MainActivity.this, UserActivity.class);
-               startActivity(user_activity_intent);
+                Intent user_activity_intent = new Intent(MainActivity.this, UserActivity.class);
+                startActivity(user_activity_intent);
 
             }
         });
@@ -80,10 +76,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        initialInserts();
+        setInitialMessages();
+        configRecyclerViewUserAndSetAdapter();
+
     }
 
     private void configRecyclerViewUserAndSetAdapter (){
-        recyclerViewUsers = findViewById(R.id.recycler_view_user);
         clickOnItemRecycleViewUser();
         RecycleViewUsersAdaptor userAdapter = new RecycleViewUsersAdaptor(MainActivity.this,userList,listener);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialInserts () {
-        currencyList= database.currencyDao().getAllCurrencies();
         if(currencyList.size()==0) {
             insertCurrencies ();
             insertCountries ();
@@ -124,10 +122,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertCountries (){
-
         Country countryMD = new Country("MD", "Republica Moldova", "MDL");
         Country countryRO = new Country("RO", "România", "RON");
-
 
         database.countryDao().insertCountry(countryRO);
         database.countryDao().insertCountry(countryMD);
@@ -249,15 +245,11 @@ public class MainActivity extends AppCompatActivity {
         database.expenseSubcategoryDao().insertExpenseSubcategory(vacation);
         database.expenseSubcategoryDao().insertExpenseSubcategory(othersD);
 
-
-
     }
 
    public void setInitialMessages(){
-       firstMessage = getResources().getString(R.string.txt_view_first_message_mainAC);
-       secondMessage = getResources().getString(R.string.txt_view_second_message_mainAC);
-
-       txt_view_message = (TextView)findViewById(R.id.txt_view_message_mainAC);
+      String firstMessage = getResources().getString(R.string.txt_view_first_message_mainAC);
+      String secondMessage = getResources().getString(R.string.txt_view_second_message_mainAC);
 
        if(userList.size() == 0){
            txt_view_message.setText(firstMessage);
@@ -265,31 +257,6 @@ public class MainActivity extends AppCompatActivity {
            txt_view_message.setText(secondMessage);
        }
    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
 
 
 }

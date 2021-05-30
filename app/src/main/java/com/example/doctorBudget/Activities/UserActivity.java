@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.doctorBudget.MyCalendar;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.User;
 import com.example.doctorBudget.R;
@@ -41,6 +42,8 @@ import java.util.List;
 
 public class UserActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    RoomDB database;
+
     EditText edt_txt_last_name, edt_txt_first_name, edt_txt_email, edt_txt_birthDay, edt_txt_occupation;
     Button btn_add_user;
     ImageView img_profile_user_upload;
@@ -50,8 +53,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
     List<String> countriesList = new ArrayList<>();
     List<User> userList = new ArrayList<>();
 
-    RoomDB database;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +60,14 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Assign variable
         edt_txt_last_name = findViewById(R.id.edt_txt_last_name);
         edt_txt_first_name = findViewById(R.id.edt_txt_first_name);
         edt_txt_email = findViewById(R.id.edt_txt_email);
         edt_txt_birthDay = findViewById(R.id.edt_txt_birthDay);
-        country_spinner = findViewById(R.id.spinner_Country);
         edt_txt_occupation = findViewById(R.id.edt_txt_occupation);
+
+        country_spinner = findViewById(R.id.spinner_Country);
+
         img_profile_user_upload = findViewById(R.id.img_profile_user_upload);
 
         btn_add_user = findViewById(R.id.btn_add_user);
@@ -86,18 +88,19 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        prepareCalendar();
-        populateCountrySpinner();
-
         btn_add_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  getContentFromInputFieldsAndInsertUser();
+                getContentFromInputFieldsAndInsertUser();
             }
         });
 
+        MyCalendar calendar = new MyCalendar();
+        calendar.prepareCalendar(edt_txt_birthDay, UserActivity.this);
+        populateCountrySpinner();
 
     }
+
     public void getContentFromInputFieldsAndInsertUser(){
         String sLastName = edt_txt_last_name.getText().toString();
         String sFirstName = edt_txt_first_name.getText().toString();
@@ -148,10 +151,8 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         user.setOccupation(occupation);
         user.setProfilePicture(proPicture);
 
-        //Insert text in database
         database.userDao().inserUser(user);
 
-        //Notify when data is inserted
         userList.clear();
         userList.addAll(database.userDao().getAllUsers());
         Intent main_activity_intent = new Intent(UserActivity.this, MainActivity.class);
@@ -167,19 +168,14 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         user.setCountry(country);
         user.setOccupation(occupation);
 
-        //Insert text in database
         database.userDao().inserUser(user);
 
-        //Notify when data is inserted
         userList.clear();
         userList.addAll(database.userDao().getAllUsers());
         Intent main_activity_intent = new Intent(UserActivity.this, MainActivity.class);
         startActivity(main_activity_intent);
     }
 
-
-
-    //Obtain the image from intern memory of smartphone
     public void chooseImage (View objectView){
         Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
         photoPickerIntent.setType("image/*");
@@ -202,37 +198,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void prepareCalendar() {
-        //Working with the calendar
-        Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        edt_txt_birthDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        UserActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month = month+1;
-                        if(month < 10) {
-                            String sBirthDay = dayOfMonth + "-" + "0" + month + "-" + year;
-                            edt_txt_birthDay.setText(sBirthDay);
-                        }
-                         else {
-                            String sBirthDay = dayOfMonth + "-"  + month + "-" + year;
-                            edt_txt_birthDay.setText(sBirthDay);
-                        }
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
-            }
-
-        });
-    }
-
     public void populateCountrySpinner(){
         countriesList.add(0," ");
         ArrayAdapter <String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countriesList);
@@ -244,16 +209,11 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
         if(parent.getItemAtPosition(position).toString().equals("România")){
-
             Toast.makeText(parent.getContext(), "Moneda de înregistrare a fost stabilită automat: Lei " , Toast.LENGTH_LONG).show();
-
         }else if(parent.getItemAtPosition(position).toString().equals("Republica Moldova")){
-
             Toast.makeText(parent.getContext(), "Moneda de înregistrare a fost stabilită automat: Lei Moldovenești " , Toast.LENGTH_LONG).show();
         }
-
     }
 
     @Override
@@ -275,17 +235,11 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         if (id == R.id.btn_home) {
             Intent main_activity_intent = new Intent(UserActivity.this, MainActivity.class);
             startActivity(main_activity_intent);
 
         }
-
         return super.onOptionsItemSelected(item);
     }
 
