@@ -34,14 +34,14 @@ import com.example.doctorBudget.Entities.User;
 // Add database entities
 @Database(entities = {User.class, Country.class, Currency.class, IncomeCategory.class,
                     IncomeSubcategory.class, PersonalFinanceSource.class, PersonalFinanceSourceCategory.class,
-                    Income.class, ExpenseCategory.class, ExpenseSubcategory.class, Expense.class},  version = 1)
+                    Income.class, ExpenseCategory.class, ExpenseSubcategory.class, Expense.class},  version = 2)
 @TypeConverters({Converters.class})
 public abstract class RoomDB extends RoomDatabase {
     //Create database instance
     private static RoomDB database;
     private static String DATABASE_NAME ="LicentaDB";
 
-    public synchronized static  RoomDB getInstance(Context context){
+    public synchronized static RoomDB getInstance(Context context){
         //Check condition
         if(database==null){
             //When database is null

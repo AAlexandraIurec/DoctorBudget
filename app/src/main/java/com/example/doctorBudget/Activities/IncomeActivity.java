@@ -33,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.doctorBudget.MyCalendar;
-import com.example.doctorBudget.RecyclerViews.RecycleViewIncomeAdaptor;
+import com.example.doctorBudget.RecyclerViews.RecyclerViewIncomeAdaptor;
 import com.example.doctorBudget.ReminderBroadcast;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Income;
@@ -50,30 +50,31 @@ import java.util.List;
 public  class IncomeActivity extends AppCompatActivity {
 
     RoomDB database;
-    List<String> incomeCategoryList = new ArrayList<>();
-    List<String> subcategoryIncomeList = new ArrayList<>();
-    List<String> usersPFSList = new ArrayList();
-    List<Income> incomeList = new ArrayList<>();
-    List<Income> newIncomeList = new ArrayList<>();
+    List<String> inc_cat_list = new ArrayList<>();
+    List<String> subcat_inc_list = new ArrayList<>();
+    List<String> user_psf_list = new ArrayList();
+    List<Income> inc_list = new ArrayList<>();
+    List<Income> new_inc_list = new ArrayList<>();
 
-    EditText edt_txt_income_date_selection_1,edt_txt_income_date_selection_2, edt_txt_amount_income,
-            edt_txt_reg_date_income, edt_txt_income_note;
-    TextView txt_view_income_currency, txt_view_required_amount_income, txt_view_required_reg_date_income,
-            txt_view_required_cat_income, txt_view_required_subCat_income, txt_view_required_psf_income,
-            txt_view_required_recurrency_income, txt_view_required_dates;
-    RadioGroup radio_grp_income_cat, radio_grp_recurrent_income;
-    RadioButton radio_gen, rdo_fix_income, rdo_variable_income, rdo_rec_yes_income, rdo_rec_no_income;
-    Spinner spinner_subcategory_income, spinner_choose_pfs;
-    ImageView img_doc_income;
-    LinearLayout form_add_income, up_income_activity_layout;
-    Button btn_reg_new_income, btn_add_income, btn_change_date_for_income, btn_abort_income,  btn_update_income ;
+    EditText edt_txt_inc_date_select1, edt_txt_inc_date_select2, edt_txt_amount_inc,
+            edt_txt_reg_date_inc, edt_txt_inc_note;
+    TextView txt_view_inc_currency, txt_view_req_amount_inc, txt_view_req_reg_date_inc,
+            txt_view_req_cat_inc, txt_view_req_subCat_inc, txt_view_req_psf_inc,
+            txt_view_req_recurrency_inc, txt_view_req_dates;
+    RadioGroup radio_grp_inc_cat, radio_grp_rec_inc;
+    RadioButton radio_gen, rdo_fix_inc, rdo_variable_inc, rdo_rec_yes_inc, rdo_rec_no_inc;
+    Spinner spinner_subCat_inc, spinner_choose_pfs;
+    ImageView img_doc_inc;
+    LinearLayout form_add_inc, up_inc_activity_layout;
+    Button btn_reg_new_inc, btn_add_inc, btn_change_date_for_inc, btn_abort_inc,  btn_update_inc;
 
-    String userCountry;
-    int userID;
-    Date today,sevenDaysBefore, selectedDate1, selectedDate2;
+    String user_country,currency;
+    int user_id;
+    Date today, seven_days_before, select_date1, select_date2;
+    MyCalendar calendar;
 
-    RecycleViewIncomeAdaptor incomeAdaptor;
-    RecyclerView recyclerViewIncome;
+    RecyclerViewIncomeAdaptor inc_adaptor;
+    RecyclerView recycler_view_inc;
 
 
 
@@ -87,221 +88,219 @@ public  class IncomeActivity extends AppCompatActivity {
 
         database = RoomDB.getInstance(this);
 
-        recyclerViewIncome = findViewById(R.id.recycler_view_income);
+        recycler_view_inc = findViewById(R.id.recycler_view_income);
 
-        edt_txt_income_date_selection_1 = findViewById(R.id.edt_txt_income_date_selection_1);
-        edt_txt_income_date_selection_2 = findViewById(R.id.edt_txt_income_date_selection_2);
-        edt_txt_amount_income = findViewById(R.id.edt_txt_amount_income);
-        edt_txt_reg_date_income = findViewById(R.id.edt_txt_reg_date_income);
-        edt_txt_income_note = findViewById(R.id.edt_txt_income_note);
+        edt_txt_inc_date_select1 = findViewById(R.id.edt_txt_income_date_selection_1);
+        edt_txt_inc_date_select2 = findViewById(R.id.edt_txt_income_date_selection_2);
+        edt_txt_amount_inc = findViewById(R.id.edt_txt_amount_income);
+        edt_txt_reg_date_inc = findViewById(R.id.edt_txt_reg_date_income);
+        edt_txt_inc_note = findViewById(R.id.edt_txt_income_note);
 
-        radio_grp_income_cat = findViewById(R.id.radio_grp_income_cat);
-        radio_grp_recurrent_income = findViewById( R.id.radio_grp_recurrent_income);
+        radio_grp_inc_cat = findViewById(R.id.radio_grp_income_cat);
+        radio_grp_rec_inc = findViewById( R.id.radio_grp_recurrent_income);
 
-        rdo_rec_yes_income = findViewById(R.id.rdo_rec_yes_income);
-        rdo_rec_no_income = findViewById(R.id.rdo_rec_no_income);
-        rdo_fix_income = findViewById(R.id.rdo_fix_income);
-        rdo_variable_income=findViewById(R.id.rdo_variable_income);
+        rdo_rec_yes_inc = findViewById(R.id.rdo_rec_yes_income);
+        rdo_rec_no_inc = findViewById(R.id.rdo_rec_no_income);
+        rdo_fix_inc = findViewById(R.id.rdo_fix_income);
+        rdo_variable_inc =findViewById(R.id.rdo_variable_income);
 
-        img_doc_income = findViewById(R.id.img_doc_income);
+        img_doc_inc = findViewById(R.id.img_doc_income);
 
-        txt_view_required_amount_income =  findViewById(R.id.txt_view_required_amount_income);
-        txt_view_required_reg_date_income =  findViewById(R.id.txt_view_required_reg_date_income);
-        txt_view_required_cat_income =  findViewById(R.id.txt_view_required_cat_income);
-        txt_view_required_subCat_income =  findViewById(R.id.txt_view_required_subCat_income);
-        txt_view_required_psf_income =  findViewById(R.id.txt_view_required_psf_income);
-        txt_view_required_recurrency_income = findViewById(R.id.txt_view_required_recurrency_income);
-        txt_view_required_dates = findViewById(R.id.txt_view_required_dates);
-        txt_view_income_currency = findViewById(R.id.txt_view_income_currency);
+        txt_view_req_amount_inc =  findViewById(R.id.txt_view_required_amount_income);
+        txt_view_req_reg_date_inc =  findViewById(R.id.txt_view_required_reg_date_income);
+        txt_view_req_cat_inc =  findViewById(R.id.txt_view_required_cat_income);
+        txt_view_req_subCat_inc =  findViewById(R.id.txt_view_required_subCat_income);
+        txt_view_req_psf_inc =  findViewById(R.id.txt_view_required_psf_income);
+        txt_view_req_recurrency_inc = findViewById(R.id.txt_view_required_recurrency_income);
+        txt_view_req_dates = findViewById(R.id.txt_view_required_dates);
+        txt_view_inc_currency = findViewById(R.id.txt_view_income_currency);
 
-        recyclerViewIncome = findViewById(R.id.recycler_view_income);
+        recycler_view_inc = findViewById(R.id.recycler_view_income);
 
-        form_add_income = findViewById(R.id.form_add_income);
-        up_income_activity_layout = findViewById(R.id.up_income_activity_layout);
+        form_add_inc = findViewById(R.id.form_add_income);
+        up_inc_activity_layout = findViewById(R.id.up_income_activity_layout);
 
-        spinner_subcategory_income = findViewById(R.id.spinner_subcategory_income);
+        spinner_subCat_inc = findViewById(R.id.spinner_subcategory_income);
         spinner_choose_pfs = findViewById(R.id.spinner_choose_pfs);
 
-        btn_reg_new_income = findViewById(R.id.btn_reg_new_income);
-        btn_add_income = findViewById(R.id.btn_add_income);
-        btn_update_income = findViewById(R.id.btn_update_income);
-        btn_abort_income = findViewById(R.id.btn_abort_income);
-        btn_change_date_for_income = findViewById(R.id.btn_change_date_for_income);
-        btn_change_date_for_income = findViewById(R.id.btn_change_date_for_income);
+        btn_reg_new_inc = findViewById(R.id.btn_reg_new_income);
+        btn_add_inc = findViewById(R.id.btn_add_income);
+        btn_update_inc = findViewById(R.id.btn_update_income);
+        btn_abort_inc = findViewById(R.id.btn_abort_income);
+        btn_change_date_for_inc = findViewById(R.id.btn_change_date_for_income);
+        btn_change_date_for_inc = findViewById(R.id.btn_change_date_for_income);
 
-        form_add_income.setVisibility(View.GONE);
+        form_add_inc.setVisibility(View.GONE);
 
-        btn_change_date_for_income.setOnClickListener(new View.OnClickListener() {
+        btn_change_date_for_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeDatesForSelectIncome();
             }
         });
 
-        btn_reg_new_income.setOnClickListener(new View.OnClickListener() {
+        btn_reg_new_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                up_income_activity_layout.setVisibility(View.GONE);
-                form_add_income.setVisibility(View.VISIBLE);
-                btn_update_income.setVisibility(View.GONE);
-                btn_add_income.setVisibility(View.VISIBLE);
+                up_inc_activity_layout.setVisibility(View.GONE);
+                form_add_inc.setVisibility(View.VISIBLE);
+                btn_update_inc.setVisibility(View.GONE);
+                btn_add_inc.setVisibility(View.VISIBLE);
                 clearInputFields();
             }
         });
 
 
-        btn_add_income.setOnClickListener(new View.OnClickListener() {
+        btn_add_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getContentFromInputFieldsAndInsertIncome();
             }
         });
 
-        btn_abort_income.setOnClickListener(new View.OnClickListener() {
+        btn_abort_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                form_add_income.setVisibility(View.GONE);
-                up_income_activity_layout.setVisibility(View.VISIBLE);
+                form_add_inc.setVisibility(View.GONE);
+                up_inc_activity_layout.setVisibility(View.VISIBLE);
                 clearInputFields();
                 resetFormErrorMessages();
             }
         });
 
-        rdo_fix_income.setOnClickListener(new View.OnClickListener() {
+        rdo_fix_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 populateSubcategoryIncomeSpinner(1);
             }
         });
 
-        rdo_variable_income.setOnClickListener(new View.OnClickListener() {
+        rdo_variable_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 populateSubcategoryIncomeSpinner(2);
             }
         });
 
-        img_doc_income.setOnClickListener(new View.OnClickListener() {
+        img_doc_inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage(img_doc_income);
+                chooseImage(img_doc_inc);
             }
         });
 
-        MyCalendar calendar = new MyCalendar();
+        calendar = new MyCalendar();
 
         prepareDatesForSelectIncome ();
         getValuesFromBundle();
         initializeAndPopulateRadioButtonsForCategoryIncome();
-        calendar.prepareCalendar(edt_txt_reg_date_income,IncomeActivity.this);
-        calendar.prepareCalendar(edt_txt_income_date_selection_1, IncomeActivity.this);
-        calendar.prepareCalendar(edt_txt_income_date_selection_2, IncomeActivity.this);
+        calendar.prepareCalendar(edt_txt_reg_date_inc,IncomeActivity.this);
+        calendar.prepareCalendar(edt_txt_inc_date_select1, IncomeActivity.this);
+        calendar.prepareCalendar(edt_txt_inc_date_select2, IncomeActivity.this);
 
-        incomeList = database.incomeDao().getAllIncomesByDates(userID,sevenDaysBefore,today);
+        inc_list = database.incomeDao().getAllIncomesByDates(user_id, seven_days_before,today);
         configRecyclerViewIncomeAndSetAdapter();
 
         createNotificationChanel();
 
     }
 
-    private void prepareDatesForSelectIncome (){
+    public void prepareDatesForSelectIncome (){
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         today = new Date();
 
         String todayForIncome = dateFormat.format(today);
 
         long ltime=today.getTime()-7*24*60*60*1000;
-        sevenDaysBefore = new Date(ltime);
+        seven_days_before = new Date(ltime);
 
-        String sevenDaysBeforeForIncome = dateFormat.format(sevenDaysBefore);
+        String sevenDaysBeforeForIncome = dateFormat.format(seven_days_before);
 
-        edt_txt_income_date_selection_2.setHint(todayForIncome);
-        edt_txt_income_date_selection_1.setHint(sevenDaysBeforeForIncome);
+        edt_txt_inc_date_select2.setHint(todayForIncome);
+        edt_txt_inc_date_select1.setHint(sevenDaysBeforeForIncome);
 
-        selectedDate1 = sevenDaysBefore;
-        selectedDate2 = today;
+        select_date1 = seven_days_before;
+        select_date2 = today;
 
     }
 
-    private void changeDatesForSelectIncome(){
-        String sSelectedDate1 = edt_txt_income_date_selection_1.getText().toString();
+    public void changeDatesForSelectIncome(){
+        String sSelectedDate1 = edt_txt_inc_date_select1.getText().toString();
         try {
-            selectedDate1 = new SimpleDateFormat("dd-MM-yyyy").parse(sSelectedDate1);
+            select_date1 = new SimpleDateFormat("dd-MM-yyyy").parse(sSelectedDate1);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String sSelectedDate2 = edt_txt_income_date_selection_2.getText().toString();
+        String sSelectedDate2 = edt_txt_inc_date_select2.getText().toString();
         try {
-            selectedDate2 = new SimpleDateFormat("dd-MM-yyyy").parse(sSelectedDate2);
+            select_date2 = new SimpleDateFormat("dd-MM-yyyy").parse(sSelectedDate2);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         if(!sSelectedDate1.equals("") && !sSelectedDate2.equals("")){
-            newIncomeList = database.incomeDao().getAllIncomesByDates(userID,selectedDate1,selectedDate2);
-            if(newIncomeList.isEmpty()){
+            new_inc_list = database.incomeDao().getAllIncomesByDates(user_id, select_date1, select_date2);
+            if(new_inc_list.isEmpty()){
                 Toast.makeText(this, "Nu există venituri inregistrate în această perioadă" , Toast.LENGTH_LONG).show();
-                incomeList.clear();
-                incomeAdaptor.notifyDataSetChanged();
+                inc_list.clear();
+                inc_adaptor.notifyDataSetChanged();
             }
             else{
-                incomeList.clear();
-                incomeList.addAll(newIncomeList);
-                incomeAdaptor.notifyDataSetChanged();
+                inc_list.clear();
+                inc_list.addAll(new_inc_list);
+                inc_adaptor.notifyDataSetChanged();
             }
-            txt_view_required_dates.setText("");
+            txt_view_req_dates.setText("");
         }
         else
         {
-            txt_view_required_dates.setText(getResources().getString(R.string.txt_view_required_dates));
+            txt_view_req_dates.setText(getResources().getString(R.string.txt_view_required_dates));
         }
 
     }
 
-    private void configRecyclerViewIncomeAndSetAdapter (){
-        incomeAdaptor = new RecycleViewIncomeAdaptor(IncomeActivity.this, incomeList);
+    public void configRecyclerViewIncomeAndSetAdapter (){
+        inc_adaptor = new RecyclerViewIncomeAdaptor(IncomeActivity.this, inc_list);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(IncomeActivity.this);
-        recyclerViewIncome.setLayoutManager(linearLayoutManager);
-        recyclerViewIncome.setAdapter(incomeAdaptor);
+        recycler_view_inc.setLayoutManager(linearLayoutManager);
+        recycler_view_inc.setAdapter(inc_adaptor);
     }
 
 
-    private void initializeAndPopulateRadioButtonsForCategoryIncome(){
-        incomeCategoryList = database.incomeCategoryDao().getAllIncomeCategoryNames();
-
-        rdo_fix_income.setText(incomeCategoryList.get(0));
-        rdo_variable_income.setText(incomeCategoryList.get(1));
+    public void initializeAndPopulateRadioButtonsForCategoryIncome(){
+        inc_cat_list = database.incomeCategoryDao().getAllIncomeCategoryNames();
+        rdo_fix_inc.setText(inc_cat_list.get(0));
+        rdo_variable_inc.setText(inc_cat_list.get(1));
     }
 
     public void populateSubcategoryIncomeSpinner(int catId){
-        subcategoryIncomeList = database.incomeSubcategoryDao().getAllIncomeSubcategoryNames(catId);
-        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subcategoryIncomeList);
+        subcat_inc_list = database.incomeSubcategoryDao().getAllIncomeSubcategoryNames(catId);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subcat_inc_list);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_subcategory_income.setAdapter(adapterSpinner);
+        spinner_subCat_inc.setAdapter(adapterSpinner);
     }
 
     public void populatePersonalFinanceSourceSpinner(int userID){
-        usersPFSList = database.personalFinanceSourceDao().getFinanceSourceByUser(userID);
-        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, usersPFSList);
+        user_psf_list = database.personalFinanceSourceDao().getFinanceSourceByUser(userID);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, user_psf_list);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_choose_pfs.setAdapter(adapterSpinner);
-    }
-
-    public void setCurrencyForIncome (String userCountry){
-        String currecyCode = database.countryDao().getCurrencyCode(userCountry);
-        String currencyName = database.currencyDao().getCurrencyName(currecyCode);
-        txt_view_income_currency.setText(currencyName);
     }
 
     public void getValuesFromBundle(){
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            userCountry = extras.getString("userCountry");
-            userID = extras.getInt("userID");
+            user_country = extras.getString("userCountry");
+            user_id = extras.getInt("userID");
         }
-        setCurrencyForIncome (userCountry);
-        populatePersonalFinanceSourceSpinner(userID);
+        setCurrencyForIncome (user_country);
+        populatePersonalFinanceSourceSpinner(user_id);
     }
 
+    public void setCurrencyForIncome (String userCountry){
+        String currecyCode = database.countryDao().getCurrencyCode(userCountry);
+        currency= database.currencyDao().getCurrencyName(currecyCode);
+        txt_view_inc_currency.setText(currency);
+    }
 
     //Obtain the image from intern memory of smartphone
     public void chooseImage (View objectView){
@@ -322,12 +321,12 @@ public  class IncomeActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            img_doc_income.setImageBitmap(mBitmap);
+            img_doc_inc.setImageBitmap(mBitmap);
         }
     }
 
     public void getContentFromInputFieldsAndInsertIncome(){
-        String sIncomeAmount = edt_txt_amount_income.getText().toString();
+        String sIncomeAmount = edt_txt_amount_inc.getText().toString();
         double incomeAmount =0;
         try {
             incomeAmount = (double)Double.parseDouble(sIncomeAmount);
@@ -335,7 +334,7 @@ public  class IncomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String sRegDate = edt_txt_reg_date_income.getText().toString();
+        String sRegDate = edt_txt_reg_date_inc.getText().toString();
         Date regDate = null;
         try {
             regDate = new SimpleDateFormat("dd-MM-yyyy").parse(sRegDate);
@@ -346,7 +345,7 @@ public  class IncomeActivity extends AppCompatActivity {
         int subcatID=0;
         String sSubcategoryIncome ="";
         try {
-            sSubcategoryIncome = spinner_subcategory_income.getSelectedItem().toString();
+            sSubcategoryIncome = spinner_subCat_inc.getSelectedItem().toString();
             subcatID = database.incomeSubcategoryDao().getIDsubCatIncome(sSubcategoryIncome);
         }catch (Exception i) {
             i.printStackTrace();
@@ -361,7 +360,7 @@ public  class IncomeActivity extends AppCompatActivity {
             i.printStackTrace();
         }
 
-        int radioID = radio_grp_recurrent_income.getCheckedRadioButtonId();
+        int radioID = radio_grp_rec_inc.getCheckedRadioButtonId();
         String sRecurrency = "";
         int intRecurrecy = 0;
         try {
@@ -374,11 +373,11 @@ public  class IncomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String incomeNote = edt_txt_income_note.getText().toString();
+        String incomeNote = edt_txt_inc_note.getText().toString();
 
         Bitmap bitmap_income_proof = null;
         try {
-            bitmap_income_proof = ((BitmapDrawable) img_doc_income.getDrawable()).getBitmap();
+            bitmap_income_proof = ((BitmapDrawable) img_doc_inc.getDrawable()).getBitmap();
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -387,15 +386,16 @@ public  class IncomeActivity extends AppCompatActivity {
         if(!sIncomeAmount.equals("") && !sRegDate.equals("") && !sSubcategoryIncome.equals("") &&
                 !sPersFinSource.equals("") && !sRecurrency.equals("")) {
             if (hasDrawable) {
-                insertIncomeWithPicture(userID, incomeAmount, regDate,subcatID,psfID, intRecurrecy,
+                insertIncomeWithPicture(user_id, incomeAmount, regDate,subcatID,psfID, intRecurrecy,
                         incomeNote,bitmap_income_proof);
             } else {
-                insertIncomeWithoutPicture(userID, incomeAmount, regDate, subcatID, psfID, intRecurrecy,
+                insertIncomeWithoutPicture(user_id, incomeAmount, regDate, subcatID, psfID, intRecurrecy,
                         incomeNote);
             }
-            setIncomeNotification();
-            form_add_income.setVisibility(View.GONE);
-            up_income_activity_layout.setVisibility(View.VISIBLE);
+            if(intRecurrecy==1)
+                setIncomeNotification();
+            form_add_inc.setVisibility(View.GONE);
+            up_inc_activity_layout.setVisibility(View.VISIBLE);
             clearInputFields();
             resetFormErrorMessages();
 
@@ -421,14 +421,14 @@ public  class IncomeActivity extends AppCompatActivity {
         database.incomeDao().insertIncome(income);
 
         int comp1 = regDate.compareTo(today);
-        int comp2 = regDate.compareTo(sevenDaysBefore);
-        int comp3 =regDate.compareTo(selectedDate1);
-        int comp4 =regDate.compareTo(selectedDate2);
+        int comp2 = regDate.compareTo(seven_days_before);
+        int comp3 =regDate.compareTo(select_date1);
+        int comp4 =regDate.compareTo(select_date2);
 
         if ((comp1 < 0 && comp2 > 0 ) ||(comp4 < 0 && comp3 >0 ))  {
-            incomeList.add(income);
-            incomeAdaptor.notifyDataSetChanged();
-            recyclerViewIncome.scrollToPosition(incomeList.size()-1);
+            inc_list.add(income);
+            inc_adaptor.notifyDataSetChanged();
+            recycler_view_inc.scrollToPosition(inc_list.size()-1);
         }
         else{
             Toast.makeText(this, "Operațiune de înregistrare a venitului a avut loc cu success!" , Toast.LENGTH_LONG).show();
@@ -451,14 +451,14 @@ public  class IncomeActivity extends AppCompatActivity {
         database.incomeDao().insertIncome(income);
 
         int comp1 = regDate.compareTo(today);
-        int comp2 = regDate.compareTo(sevenDaysBefore);
-        int comp3 =regDate.compareTo(selectedDate1);
-        int comp4 =regDate.compareTo(selectedDate2);
+        int comp2 = regDate.compareTo(seven_days_before);
+        int comp3 =regDate.compareTo(select_date1);
+        int comp4 =regDate.compareTo(select_date2);
 
         if ((comp1 < 0 && comp2 > 0 ) ||(comp4 < 0 && comp3 >0 ))  {
-            incomeList.add(income);
-            incomeAdaptor.notifyDataSetChanged();
-            recyclerViewIncome.scrollToPosition(incomeList.size()-1);
+            inc_list.add(income);
+            inc_adaptor.notifyDataSetChanged();
+            recycler_view_inc.scrollToPosition(inc_list.size()-1);
         }
         else{
             Toast.makeText(this, "Operațiune de înregistrare a venitului a avut loc cu success!" , Toast.LENGTH_LONG).show();
@@ -467,30 +467,30 @@ public  class IncomeActivity extends AppCompatActivity {
     }
 
     public void throwFormErrorMessages(){
-        txt_view_required_amount_income.setText(getResources().getString(R.string.txt_view_required_amount));
-        txt_view_required_reg_date_income.setText(getResources().getString(R.string.txt_view_required_reg_date));
-        txt_view_required_cat_income.setText(getResources().getString(R.string.txt_view_required_cat));
-        txt_view_required_subCat_income.setText(getResources().getString(R.string.txt_view_required_subCat));
-        txt_view_required_psf_income.setText(getResources().getString(R.string.txt_view_required_psf));
-        txt_view_required_recurrency_income.setText(getResources().getString(R.string.txt_view_required_recurrency));
+        txt_view_req_amount_inc.setText(getResources().getString(R.string.txt_view_required_amount));
+        txt_view_req_reg_date_inc.setText(getResources().getString(R.string.txt_view_required_reg_date));
+        txt_view_req_cat_inc.setText(getResources().getString(R.string.txt_view_required_cat));
+        txt_view_req_subCat_inc.setText(getResources().getString(R.string.txt_view_required_subCat));
+        txt_view_req_psf_inc.setText(getResources().getString(R.string.txt_view_required_psf));
+        txt_view_req_recurrency_inc.setText(getResources().getString(R.string.txt_view_required_recurrency));
     }
 
     public void clearInputFields(){
-        edt_txt_amount_income.setText("");
-        edt_txt_reg_date_income.setText("");
-        edt_txt_income_note.setText("");
-        radio_grp_income_cat.clearCheck();
-        radio_grp_recurrent_income.clearCheck();
-        img_doc_income.setImageResource(R.drawable.ic_photo);
+        edt_txt_amount_inc.setText("");
+        edt_txt_reg_date_inc.setText("");
+        edt_txt_inc_note.setText("");
+        radio_grp_inc_cat.clearCheck();
+        radio_grp_rec_inc.clearCheck();
+        img_doc_inc.setImageResource(R.drawable.ic_photo);
     }
 
     public void resetFormErrorMessages(){
-        txt_view_required_amount_income.setText(getResources().getString(R.string.txt_view_star));
-        txt_view_required_reg_date_income.setText(getResources().getString(R.string.txt_view_star));
-        txt_view_required_cat_income.setText(getResources().getString(R.string.txt_view_star));
-        txt_view_required_subCat_income.setText(getResources().getString(R.string.txt_view_star));
-        txt_view_required_psf_income.setText(getResources().getString(R.string.txt_view_star));
-        txt_view_required_recurrency_income.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_amount_inc.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_reg_date_inc.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_cat_inc.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_subCat_inc.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_psf_inc.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_req_recurrency_inc.setText(getResources().getString(R.string.txt_view_star));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -527,7 +527,7 @@ public  class IncomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_for_others_activities, menu);
+        getMenuInflater().inflate(R.menu.menu_home_button, menu);
         return true;
     }
 

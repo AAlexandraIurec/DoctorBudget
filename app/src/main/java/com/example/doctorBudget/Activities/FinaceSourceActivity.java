@@ -16,7 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.doctorBudget.RecyclerViews.RecycleViewPersFinanceSourceAdaptor;
+import com.example.doctorBudget.RecyclerViews.RecyclerViewPFSAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.PersonalFinanceSource;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public class FinaceSourceActivity extends AppCompatActivity {
 
     RoomDB database;
-    List<String> pers_finance_source_cat_list = new ArrayList<>();
+    List<String> pfs_cat_list = new ArrayList<>();
     RadioGroup radio_grp_cat_psf;
     RadioButton radio_gen,radio_pfs_casf,radio_pfs_dbt_card,radio_pfs_meal_tkt,
             radio_pfs_crd_card, radio_pfs_others;
@@ -38,9 +38,9 @@ public class FinaceSourceActivity extends AppCompatActivity {
 
     int user_id_pfs=0;
 
-    List<PersonalFinanceSource>personalFinanceSourceList = new ArrayList<>();
-    RecyclerView recyclerViewPersonalFinanceSource;
-    RecycleViewPersFinanceSourceAdaptor persFinanceSourceAdaptor;
+    List<PersonalFinanceSource> pfs_list = new ArrayList<>();
+    RecyclerView recycler_View_pfs;
+    RecyclerViewPFSAdaptor pfs_rv_adaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class FinaceSourceActivity extends AppCompatActivity {
             user_id_pfs = extras.getInt("userId");
         }
 
-        personalFinanceSourceList = database.personalFinanceSourceDao().getAllPersonalFinanceSources(user_id_pfs);
+        pfs_list = database.personalFinanceSourceDao().getAllPersonalFinanceSources(user_id_pfs);
         configRecyclerViewPFSAndSetAdapter ();
 
         btn_add_pfs.setOnClickListener(new View.OnClickListener() {
@@ -76,31 +76,39 @@ public class FinaceSourceActivity extends AppCompatActivity {
             }
         });
 
+        btn_update_pfs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
 
     }
 
-    private void configRecyclerViewPFSAndSetAdapter (){
-        recyclerViewPersonalFinanceSource = findViewById(R.id.recycler_view_personal_finance_source);
-        persFinanceSourceAdaptor = new RecycleViewPersFinanceSourceAdaptor(FinaceSourceActivity.this,personalFinanceSourceList);
+    public void configRecyclerViewPFSAndSetAdapter (){
+        recycler_View_pfs = findViewById(R.id.recycler_view_personal_finance_source);
+        pfs_rv_adaptor = new RecyclerViewPFSAdaptor(FinaceSourceActivity.this, pfs_list);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(FinaceSourceActivity.this);
-        recyclerViewPersonalFinanceSource.setLayoutManager(linearLayoutManager);
-        recyclerViewPersonalFinanceSource.setAdapter(persFinanceSourceAdaptor);
+        recycler_View_pfs.setLayoutManager(linearLayoutManager);
+        recycler_View_pfs.setAdapter(pfs_rv_adaptor);
     }
 
-    private void initializeAndPopulateRadioButtons(){
+    public void initializeAndPopulateRadioButtons(){
         radio_pfs_casf = findViewById(R.id.rdo_pfs_cash);
         radio_pfs_dbt_card = findViewById(R.id.rdo_pfs_dbt_card);
         radio_pfs_meal_tkt= findViewById(R.id.rdo_pfs_meal_tkt);
         radio_pfs_crd_card= findViewById(R.id.rdo_pfs_crd_card);
         radio_pfs_others= findViewById(R.id.rdo_pfs_others);
 
-        pers_finance_source_cat_list = database.personalFinanceSourceCategoryDao().getAllPersonalFinanceSourceCatNames();
+        pfs_cat_list = database.personalFinanceSourceCategoryDao().getAllPersonalFinanceSourceCatNames();
 
-        radio_pfs_casf.setText(pers_finance_source_cat_list.get(0));
-        radio_pfs_dbt_card.setText(pers_finance_source_cat_list.get(1));
-        radio_pfs_meal_tkt.setText(pers_finance_source_cat_list.get(2));
-        radio_pfs_crd_card.setText(pers_finance_source_cat_list.get(3));
-        radio_pfs_others.setText(pers_finance_source_cat_list.get(4));
+        radio_pfs_casf.setText(pfs_cat_list.get(0));
+        radio_pfs_dbt_card.setText(pfs_cat_list.get(1));
+        radio_pfs_meal_tkt.setText(pfs_cat_list.get(2));
+        radio_pfs_crd_card.setText(pfs_cat_list.get(3));
+        radio_pfs_others.setText(pfs_cat_list.get(4));
     }
 
 
@@ -121,8 +129,8 @@ public class FinaceSourceActivity extends AppCompatActivity {
         }
         if(!pfs_name.equals("") && !psf_cat_name.equals("")) {
             insertPersonalFinanceSource(user_id_pfs, pfs_name, pfs_note, pfs_cat_id);
-            persFinanceSourceAdaptor.notifyDataSetChanged();
-            recyclerViewPersonalFinanceSource.scrollToPosition(personalFinanceSourceList.size()-1);
+            pfs_rv_adaptor.notifyDataSetChanged();
+            recycler_View_pfs.scrollToPosition(pfs_list.size()-1);
             clearInputFields();
         }
         else{
@@ -141,7 +149,7 @@ public class FinaceSourceActivity extends AppCompatActivity {
 
         //Insert text in database
         database.personalFinanceSourceDao().insertPersonalFinanceSource(personalFinanceSource);
-        personalFinanceSourceList.add(personalFinanceSource);
+        pfs_list.add(personalFinanceSource);
 
     }
 
@@ -154,7 +162,7 @@ public class FinaceSourceActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_for_others_activities, menu);
+        getMenuInflater().inflate(R.menu.menu_home_button, menu);
         return true;
     }
 

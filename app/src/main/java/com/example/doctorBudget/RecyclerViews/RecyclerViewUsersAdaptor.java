@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUsersAdaptor.ViewHolder> {
+public class RecyclerViewUsersAdaptor extends RecyclerView.Adapter<RecyclerViewUsersAdaptor.ViewHolder> {
 
 
     private List<User> userList;
@@ -32,7 +32,7 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
 
     private RecyclerViewClickListener listener;
 
-    public RecycleViewUsersAdaptor(Activity context,List<User> userList, RecyclerViewClickListener listener) {
+    public RecyclerViewUsersAdaptor(Activity context, List<User> userList, RecyclerViewClickListener listener) {
         this.context = context;
         this.userList = userList;
         this.listener = listener;
@@ -41,13 +41,13 @@ public class RecycleViewUsersAdaptor extends RecyclerView.Adapter<RecycleViewUse
 
     @NonNull
     @Override
-    public RecycleViewUsersAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewUsersAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_user, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewUsersAdaptor.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewUsersAdaptor.ViewHolder holder, int position) {
 
         User user = userList.get(position);
         database = RoomDB.getInstance(context);

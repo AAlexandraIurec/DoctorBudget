@@ -10,10 +10,10 @@ import static androidx.room.ForeignKey.CASCADE;
 
 @Entity (foreignKeys = @ForeignKey(entity = Currency.class,
                                     parentColumns = "currencyCode",
-                                    childColumns = "currencyCodeC",
-                                    onDelete = CASCADE),
+                                    childColumns = "currencyCodeC"),
         indices = {@Index(value = {"countryName"},
                 unique = true)})
+
 public class Country {
     @NonNull
     @PrimaryKey

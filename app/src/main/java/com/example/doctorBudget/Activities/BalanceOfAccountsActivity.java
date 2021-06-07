@@ -1,9 +1,6 @@
 package com.example.doctorBudget.Activities;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,17 +11,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.doctorBudget.R;
 import com.example.doctorBudget.TopExpenses;
@@ -43,10 +37,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class BalanceOfAccountsActivity extends AppCompatActivity {
 
@@ -67,6 +59,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
     Date thisMonthQuery, nextMonthQuery, selectedDate1,selectedDate2;
     double incomeSum,expenseSumForPeriod,ramainingSum, expenseSumFromBeginning;
     String sSelectedDate1="",sSelectedDate2="";
+    MyCalendar calendar;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -151,7 +144,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
             }
         });
 
-        MyCalendar calendar = new MyCalendar();
+        calendar = new MyCalendar();
 
         prepareDatesForInitialBalanceProf();
         getTheSumsProf(thisMonthQuery,thisMonthQuery, nextMonthQuery);
@@ -291,17 +284,24 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
         ArrayList<String> labelsNames = new ArrayList<>();
         double restSum=0;
         int ok=0;
-        for(int i=0;i<pfsIncomeTopList.size();i++) {
-            for (int j=0;j<pfsExpenseTopList.size();j++){
-                if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID()) {
-                    restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
-                    ok=1;
-                }else if(ok==0)
-                    restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
+        if(pfsExpenseTopList.size()>0)
+            for(int i=0;i<pfsIncomeTopList.size();i++) {
+                for (int j=0;j<pfsExpenseTopList.size();j++){
+                    if(pfsIncomeTopList.get(i).getPsfID()==pfsExpenseTopList.get(j).getPsfID()) {
+                        restSum = pfsIncomeTopList.get(i).getSumAmountInc() - pfsExpenseTopList.get(j).getSumAmountExp();
+                        ok=1;
+                    }else if(ok==0)
+                        restSum =pfsIncomeTopList.get(i).getSumAmountInc()-0;
+                }
+                barEntryArrayList.add(new BarEntry(i, (float) restSum));
+                labelsNames.add(pfsIncomeTopList.get(i).getPfsName());
             }
-            barEntryArrayList.add(new BarEntry(i, (float) restSum));
-            labelsNames.add(pfsIncomeTopList.get(i).getPfsName());
-        }
+        else
+            for (int i=0;i<pfsIncomeTopList.size();i++) {
+                double sum  =  pfsIncomeTopList.get(i).getSumAmountInc();
+                barEntryArrayList.add(new BarEntry(i, (float) sum ));
+                labelsNames.add(pfsIncomeTopList.get(i).getPfsName());
+            }
 
         BarDataSet barDataSet = new BarDataSet(barEntryArrayList, chartLabel+"  (Lei)");
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -328,7 +328,7 @@ public class BalanceOfAccountsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_for_others_activities, menu);
+        getMenuInflater().inflate(R.menu.menu_home_button, menu);
         return true;
     }
 

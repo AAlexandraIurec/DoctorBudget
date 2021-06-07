@@ -1,8 +1,5 @@
 package com.example.doctorBudget.Activities;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,11 +18,9 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -36,9 +31,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -48,10 +44,11 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
     Button btn_add_user;
     ImageView img_profile_user_upload;
     Spinner country_spinner;
-    TextView txt_view_lstNme_req, txt_view_fstNme_req, txt_view_country_req;
+    TextView txt_view_lstNme_req, txt_view_fstNme_req, txt_view_country_req, txt_view_reg_email, txt_view_reg_birthDay;
+    MyCalendar calendar;
 
     List<String> countriesList = new ArrayList<>();
-    List<User> userList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +72,10 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         txt_view_lstNme_req =  findViewById(R.id.txt_view_required_lstNme);
         txt_view_fstNme_req =findViewById(R.id.txt_view_required_fstNme);
         txt_view_country_req=findViewById(R.id.txt_view_required_country);
+        txt_view_reg_email = findViewById(R.id.txt_view_reg_email);
+        txt_view_reg_birthDay = findViewById(R.id.txt_view_reg_birthDay);
 
         database = RoomDB.getInstance(this);
-        userList = database.userDao().getAllUsers();
         countriesList = database.countryDao().getAllCountryNames();
 
 
@@ -95,7 +93,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        MyCalendar calendar = new MyCalendar();
+        calendar = new MyCalendar();
         calendar.prepareCalendar(edt_txt_birthDay, UserActivity.this);
         populateCountrySpinner();
 
@@ -125,11 +123,27 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         boolean hasDrawable = (bitmap_user_profile!=null);
 
+        String regexEmail = "^(.+)@(.+)$";
+        String regexBirthDate = "^[0-9]?[0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]$";
+
+        Pattern patternDate = Pattern.compile(regexBirthDate);
+        Pattern patternEmail = Pattern.compile(regexEmail);
+        Matcher matchEmail = patternEmail.matcher(sEmail);
+        Matcher matchDate = patternDate.matcher(sBirthDay);
+
         if(!sLastName.equals("") && !sFirstName.equals("") && !sCountry.equals(" ")) {
-            if (hasDrawable) {
-                insertUserWithProfilePicture(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation, bitmap_user_profile);
-            } else {
-                insertUser(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation);
+            if(matchEmail.matches()) {
+                if(matchDate.matches() ) {
+                    if (hasDrawable) {
+                        insertUserWithProfilePicture(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation, bitmap_user_profile);
+                    } else {
+                        insertUser(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation);
+                    }
+                }else{
+                    txt_view_reg_birthDay.setText(getResources().getString(R.string.txt_view_reg_birthDay));
+                }
+            }else{
+                txt_view_reg_email.setText(getResources().getString(R.string.txt_view_reg_email));
             }
         }
         else{
@@ -153,8 +167,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
         database.userDao().inserUser(user);
 
-        userList.clear();
-        userList.addAll(database.userDao().getAllUsers());
         Intent main_activity_intent = new Intent(UserActivity.this, MainActivity.class);
         startActivity(main_activity_intent);
     }
@@ -170,8 +182,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
         database.userDao().inserUser(user);
 
-        userList.clear();
-        userList.addAll(database.userDao().getAllUsers());
         Intent main_activity_intent = new Intent(UserActivity.this, MainActivity.class);
         startActivity(main_activity_intent);
     }
@@ -224,7 +234,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_for_others_activities, menu);
+        getMenuInflater().inflate(R.menu.menu_home_button, menu);
         return true;
     }
 

@@ -16,8 +16,7 @@ public interface CountryDao {
     @Insert(onConflict = REPLACE)
     void insertCountry(Country country);
 
-
-   @Query("SELECT countryName FROM Country ORDER BY countryName desc")
+    @Query("SELECT countryName FROM Country ORDER BY countryName desc")
     List<String> getAllCountryNames();
 
     @Query("SELECT * FROM Country")

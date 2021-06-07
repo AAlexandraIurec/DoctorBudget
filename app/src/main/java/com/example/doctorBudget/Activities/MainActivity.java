@@ -3,7 +3,7 @@ package com.example.doctorBudget.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.doctorBudget.RecyclerViews.RecycleViewUsersAdaptor;
+import com.example.doctorBudget.RecyclerViews.RecyclerViewUsersAdaptor;
 import com.example.doctorBudget.RoomDB;
 import com.example.doctorBudget.Entities.Country;
 import com.example.doctorBudget.Entities.Currency;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     List<User>userList = new ArrayList<>();
 
     RecyclerView recyclerViewUsers;
-    RecycleViewUsersAdaptor.RecyclerViewClickListener listener;
+    RecyclerViewUsersAdaptor.RecyclerViewClickListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void configRecyclerViewUserAndSetAdapter (){
+   public void configRecyclerViewUserAndSetAdapter (){
         clickOnItemRecycleViewUser();
-        RecycleViewUsersAdaptor userAdapter = new RecycleViewUsersAdaptor(MainActivity.this,userList,listener);
+        RecyclerViewUsersAdaptor userAdapter = new RecyclerViewUsersAdaptor(MainActivity.this,userList,listener);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerViewUsers.setLayoutManager(linearLayoutManager);
         recyclerViewUsers.setAdapter(userAdapter);
     }
 
-    private void clickOnItemRecycleViewUser() {
-        listener = new RecycleViewUsersAdaptor.RecyclerViewClickListener() {
+    public void clickOnItemRecycleViewUser() {
+        listener = new RecyclerViewUsersAdaptor.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
                 Intent balance_activity_intent = new Intent(MainActivity.this,BalanceActivity.class);
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private void initialInserts () {
+    public void initialInserts () {
         if(currencyList.size()==0) {
             insertCurrencies ();
             insertCountries ();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             insertExpenseSubcategories();
         }
     }
-    private void insertCurrencies (){
+    public void insertCurrencies (){
         Currency currencyRO = new Currency("RON", "Lei" );
         Currency currencyMD = new Currency("MDL", "Lei moldovenești");
 
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         database.currencyDao().insertCurrency(currencyMD);
     }
 
-    private void insertCountries (){
+    public void insertCountries (){
         Country countryMD = new Country("MD", "Republica Moldova", "MDL");
         Country countryRO = new Country("RO", "România", "RON");
 
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void insertIncomeCategories(){
+    public void insertIncomeCategories(){
         IncomeCategory fixed_income = new IncomeCategory("Venit fix");
         IncomeCategory variable_income = new IncomeCategory("Venit variabil");
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         database.incomeCategoryDao().insertIncomeCategory(variable_income);
     }
 
-    private void insertIncomeSubcategories(){
+    public void insertIncomeSubcategories(){
         IncomeSubcategory salary = new IncomeSubcategory("Salariu", 1);
         IncomeSubcategory scholarship = new IncomeSubcategory("Bursă", 1);
         IncomeSubcategory allowance = new IncomeSubcategory("Alocație", 1);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void insertPersonalFinanceSourceCategories(){
+    public void insertPersonalFinanceSourceCategories(){
         PersonalFinanceSourceCategory cash =new PersonalFinanceSourceCategory("Portofel");
         PersonalFinanceSourceCategory debit_card =new PersonalFinanceSourceCategory("Card de debit");
         PersonalFinanceSourceCategory meal_vouchers =new PersonalFinanceSourceCategory("Tichete de masă");
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         database.personalFinanceSourceCategoryDao().insertPersonalFinanceSourecCategory(othersPFS);
     }
 
-    private void insertExpenseCategories(){
+    public void insertExpenseCategories(){
         ExpenseCategory fixed_expense = new ExpenseCategory("Cheltuială fixă");
         ExpenseCategory variable_expense = new ExpenseCategory("Cheltuială variabilă");
         ExpenseCategory discretionary_expense = new ExpenseCategory("Cheltuială discreționară");
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         database.expenseCategoryDao().insertExpenseCategory(discretionary_expense);
     }
 
-    private void insertExpenseSubcategories(){
+    public void insertExpenseSubcategories(){
         ExpenseSubcategory mortgage = new ExpenseSubcategory("Rată", 1);
         ExpenseSubcategory rent = new ExpenseSubcategory("Chirie", 1);
         ExpenseSubcategory contributionsToTheState = new ExpenseSubcategory("Contribuții la stat", 1);
@@ -248,13 +248,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
    public void setInitialMessages(){
-      String firstMessage = getResources().getString(R.string.txt_view_first_message_mainAC);
-      String secondMessage = getResources().getString(R.string.txt_view_second_message_mainAC);
 
        if(userList.size() == 0){
-           txt_view_message.setText(firstMessage);
+           txt_view_message.setText(getResources().getString(R.string.txt_view_first_message_mainAC));
        }else{
-           txt_view_message.setText(secondMessage);
+           txt_view_message.setText(getResources().getString(R.string.txt_view_second_message_mainAC));
        }
    }
 

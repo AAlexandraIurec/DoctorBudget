@@ -22,32 +22,32 @@ import com.example.doctorBudget.RoomDB;
 
 import java.util.List;
 
-public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<RecycleViewPersFinanceSourceAdaptor.ViewHolder> {
+public class RecyclerViewPFSAdaptor extends RecyclerView.Adapter<RecyclerViewPFSAdaptor.ViewHolder> {
 
     //Initialize variable
-    private List<PersonalFinanceSource> personalFinanceSourceList;
+    private List<PersonalFinanceSource> persFinSourceList;
     private Activity context;
     private RoomDB database;
 
 
-    public RecycleViewPersFinanceSourceAdaptor(Activity context,List<PersonalFinanceSource> personalFinanceSourceList) {
+    public RecyclerViewPFSAdaptor(Activity context, List<PersonalFinanceSource> personalFinanceSourceList) {
         this.context = context;
-        this.personalFinanceSourceList = personalFinanceSourceList;
+        this.persFinSourceList = personalFinanceSourceList;
     }
 
     @NonNull
     @Override
-    public RecycleViewPersFinanceSourceAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewPFSAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_basic, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewPersFinanceSourceAdaptor.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewPFSAdaptor.ViewHolder holder, int position) {
 
         //Initialize main data
-        PersonalFinanceSource personalFinanceSource = personalFinanceSourceList.get(position);
+        PersonalFinanceSource personalFinanceSource = persFinSourceList.get(position);
         //Initialize database
         database = RoomDB.getInstance(context);
         //Set text on text view
@@ -60,7 +60,7 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
         holder.btn_edit_bsc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PersonalFinanceSource pfs = personalFinanceSourceList.get(holder.getAdapterPosition());
+                PersonalFinanceSource pfs = persFinSourceList.get(holder.getAdapterPosition());
 
                 int pfsID = pfs.getFinance_source_id();
                 int pfsUserID = pfs.getUser_id_pfs();
@@ -124,12 +124,20 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
                             e.printStackTrace();
                         }
 
+
                         database.personalFinanceSourceDao().updatePFS(sPfsName, sPfsNote,intPfsCat,pfsUserID,pfsID);
-                        personalFinanceSourceList.clear();
+                        persFinSourceList.clear();
                         //data:
                         List<PersonalFinanceSource> upPFS=database.personalFinanceSourceDao().getAllPersonalFinanceSources(pfsUserID);
-                        personalFinanceSourceList.addAll(upPFS);
+                        persFinSourceList.addAll(upPFS);
                         notifyDataSetChanged();
+
+                        txtPfsName.setText("");
+                        txtPfsNote.setText("");
+                        radio_grp_pfs_cat.clearCheck();
+                        btn_add_pfs.setVisibility(View.VISIBLE);
+                        btn_update_pfs.setVisibility(View.GONE);
+
                     }
                 });
 
@@ -141,7 +149,7 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
             @Override
             public void onClick(View v) {
                 //Initialize main data
-               PersonalFinanceSource pfs = personalFinanceSourceList.get(holder.getAdapterPosition());
+               PersonalFinanceSource pfs = persFinSourceList.get(holder.getAdapterPosition());
 
                 //Create dialog
                 Dialog dialog = new Dialog(context);
@@ -168,9 +176,9 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
                         database.personalFinanceSourceDao().deletePersonalFinanceSource(pfs);
                         //Notify when data is deleted
                         int position = holder.getAdapterPosition();
-                        personalFinanceSourceList.remove(position);
+                        persFinSourceList.remove(position);
                         notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, personalFinanceSourceList.size());
+                        notifyItemRangeChanged(position, persFinSourceList.size());
                         dialog.dismiss();
                     }
                 });
@@ -189,7 +197,7 @@ public class RecycleViewPersFinanceSourceAdaptor extends RecyclerView.Adapter<Re
 
     @Override
     public int getItemCount() {
-        return personalFinanceSourceList.size();
+        return persFinSourceList.size();
     }
 
 

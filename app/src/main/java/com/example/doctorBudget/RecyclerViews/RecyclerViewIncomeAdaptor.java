@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RecycleViewIncomeAdaptor extends RecyclerView.Adapter<RecycleViewIncomeAdaptor.ViewHolder> {
+public class RecyclerViewIncomeAdaptor extends RecyclerView.Adapter<RecyclerViewIncomeAdaptor.ViewHolder> {
     private List<Income> incomeList;
     private Activity context;
     private View up_activity_layout;
@@ -40,7 +40,7 @@ public class RecycleViewIncomeAdaptor extends RecyclerView.Adapter<RecycleViewIn
 
 
 
-    public RecycleViewIncomeAdaptor(Activity context, List<Income> incomeList) {
+    public RecyclerViewIncomeAdaptor(Activity context, List<Income> incomeList) {
         this.context = context;
         this.incomeList = incomeList;
         this.up_activity_layout =context.findViewById(R.id.up_income_activity_layout);
@@ -53,14 +53,14 @@ public class RecycleViewIncomeAdaptor extends RecyclerView.Adapter<RecycleViewIn
 
     @NonNull
     @Override
-    public RecycleViewIncomeAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewIncomeAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_basic, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewIncomeAdaptor.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewIncomeAdaptor.ViewHolder holder, int position) {
         //Initialize main data
         Income income = incomeList.get(position);
         //Initialize database

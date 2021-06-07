@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RecycleViewExpenseAdaptor extends RecyclerView.Adapter<RecycleViewExpenseAdaptor.ViewHolder> {
+public class RecyclerViewExpenseAdaptor extends RecyclerView.Adapter<RecyclerViewExpenseAdaptor.ViewHolder> {
     private List<Expense> expenseList;
     private Activity context;
     private RoomDB database;
@@ -38,7 +38,7 @@ public class RecycleViewExpenseAdaptor extends RecyclerView.Adapter<RecycleViewE
     private Date today_exp,sevenBefore_exp;
     
 
-    public RecycleViewExpenseAdaptor(Activity context,List<Expense> expenseList) {
+    public RecyclerViewExpenseAdaptor(Activity context, List<Expense> expenseList) {
         this.context = context;
         this.expenseList = expenseList;
         this.up_activity_layout_expense=context.findViewById(R.id.up_expense_activity_layout);
@@ -51,14 +51,14 @@ public class RecycleViewExpenseAdaptor extends RecyclerView.Adapter<RecycleViewE
 
     @NonNull
     @Override
-    public RecycleViewExpenseAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewExpenseAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_basic, parent, false);
-        return new RecycleViewExpenseAdaptor.ViewHolder(view);
+        return new RecyclerViewExpenseAdaptor.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewExpenseAdaptor.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewExpenseAdaptor.ViewHolder holder, int position) {
         //Initialize main data
         Expense expense = expenseList.get(position);
         //Initialize database
@@ -121,7 +121,7 @@ public class RecycleViewExpenseAdaptor extends RecyclerView.Adapter<RecycleViewE
                     ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, subcategoryExpenseList);
                     adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerSubcategoryExpense.setAdapter(adapterSpinner);
-                    spinnerSubcategoryExpense.setSelection(expSubcatId);
+                    spinnerSubcategoryExpense.setSelection(expSubcatId-1);
                 }else
                 if(cat.equals("Cheltuială variabilă")){
                     rdoCatVar.setChecked(true);
