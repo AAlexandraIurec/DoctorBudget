@@ -96,7 +96,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         calendar = new MyCalendar();
         calendar.prepareCalendar(edt_txt_birthDay, UserActivity.this);
         populateCountrySpinner();
-
     }
 
     public void getContentFromInputFieldsAndInsertUser(){
@@ -132,19 +131,27 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         Matcher matchDate = patternDate.matcher(sBirthDay);
 
         if(!sLastName.equals("") && !sFirstName.equals("") && !sCountry.equals(" ")) {
-            if(matchEmail.matches()) {
-                if(matchDate.matches() ) {
+            resetErrorRequiredFields();
+            if((matchEmail.matches() && sBirthDay.equals("") ) || (matchDate.matches() && sEmail.equals("")) ||
+                        (matchDate.matches() && matchEmail.matches() ) ||  (sBirthDay.equals("") && sEmail.equals(""))){
                     if (hasDrawable) {
                         insertUserWithProfilePicture(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation, bitmap_user_profile);
                     } else {
                         insertUser(sLastName, sFirstName, sEmail, bDate1, sCountry, sOccupation);
                     }
-                }else{
-                    txt_view_reg_birthDay.setText(getResources().getString(R.string.txt_view_reg_birthDay));
-                }
-            }else{
-                txt_view_reg_email.setText(getResources().getString(R.string.txt_view_reg_email));
-            }
+            }else
+
+                    if(!matchDate.matches() && !matchEmail.matches() && !sBirthDay.equals("") && !sEmail.equals("")){
+                        txt_view_reg_email.setText(getResources().getString(R.string.txt_view_reg_email));
+                        txt_view_reg_birthDay.setText(getResources().getString(R.string.txt_view_reg_birthDay));
+                    }else
+                        if(!matchDate.matches() && !sBirthDay.equals("") ) {
+                            txt_view_reg_birthDay.setText(getResources().getString(R.string.txt_view_reg_birthDay));
+                            txt_view_reg_email.setText("");
+                        }else  if(!matchEmail.matches() &&  !sEmail.equals("") ){
+                            txt_view_reg_email.setText(getResources().getString(R.string.txt_view_reg_email));
+                            txt_view_reg_birthDay.setText("");
+                        }
         }
         else{
             txt_view_lstNme_req.setText(getResources().getString(R.string.txt_view_user_lstNme_req));
@@ -214,6 +221,12 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         country_spinner.setAdapter(adapterSpinner);
         country_spinner.setOnItemSelectedListener(this);
+    }
+
+    public void resetErrorRequiredFields (){
+        txt_view_lstNme_req.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_fstNme_req.setText(getResources().getString(R.string.txt_view_star));
+        txt_view_country_req.setText(getResources().getString(R.string.txt_view_star));
     }
 
 

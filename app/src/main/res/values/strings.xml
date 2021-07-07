@@ -34,8 +34,8 @@
     <string name="txt_view_user_lstNme_req">Numele este obligatoriu!</string>
     <string name="txt_view_user_fstNme_req">Prenumele este obligatoriu!</string>
     <string name="txt_view_user_country_req">Țara este obligatorie!</string>
-    <string name="txt_view_reg_email">Adresa de email trebuie să conțină semnul @</string>
-    <string name="txt_view_reg_birthDay">Data trebuie să fie de forma dd-mm-yyyy</string>
+    <string name="txt_view_reg_email">Adresa de email trebuie să conțină semnul @!</string>
+    <string name="txt_view_reg_birthDay">Data trebuie să fie de forma dd-mm-yyyy!</string>
     <string name="txt_view_pfs_name_req">Numele sursei este obligatoriu!</string>
     <string name="txt_view_pfs_category_req">Categoria este obligatorie!</string>
     <string name="txt_view_star">*</string>
